@@ -1,29 +1,26 @@
--- -- VSCode Neovim
--- vim.cmd({
--- 	if exists('g:vscode')
--- 		" VSCode extension
--- 	else
--- 		" ordinary neovim
--- 	endif
--- })
+require("plugins")
+require("Telescope-config")
+require("Treesitter-config")
+require("ftplugin.init")
+require("barbar-config")
+require("keymappings-config")
+require("lsp-settings")
+require("lspsaga-config")
+require("nvim-cmp")
+require("nvim-autopair")
+require("luasnip_snippets")
+require("nvim-comment")
+require("nvim-foldtext")
+require("nvim-formatter")
+require("nvim-glow-markdown")
+require("nvim-null-ls")
+require("nvim-prettier")
+require("nvim-sniprun")
+require("nvim-spellcheck")
+require("nvim-symbols-outline")
+require("nvim-toggleterm")
+require("nvim_setting-config")
+require("texmagic-config")
+require("web-devicons-config")
+require("Which-key-config")
 
-
-require('plugins')
-require('keymappings-config')
-require('nvim_setting-config')
-require('nvim-cmp')
-require('lsp-settings')
-
---[[ require('Markdown-preview') ]]
-require('texmagic-config')
-
-require('vim-xkbswitch-config')
-require('format-config')
-
-require('indent_blankline-config')
-require('Treesitter-config')
-require('Autopairs-config')
-require('Telescope-config')
-require('nvim-web-devicons-config')
-require('which-key-config')
-require('barbar-config')
