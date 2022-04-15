@@ -21,7 +21,7 @@ require("nvim-treesitter.configs").setup({
 		-- Instead of true it can also be a list of languages
 		additional_vim_regex_highlighting = false,
 	},
-	incremental_selection = {
+	inmremental_selection = {
 		enable = true,
 		keymaps = {
 			init_selection = "gnn",
@@ -32,5 +32,16 @@ require("nvim-treesitter.configs").setup({
 	},
 	indent = {
 		enable = true,
+	},
+	autotag = {
+		enable = true,
+	},
+	context_commentstring = {
+		enable = true,
+		enable_autocmd = false,
+	},
+	refactor = {
+		highlight_definitions = { enable = true },
+		highlight_current_scope = { enable = false },
 	},
 })

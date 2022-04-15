@@ -84,6 +84,7 @@ return require("packer").startup({
 				"f3fora/cmp-spell", --nvim-cmp 的拼写源基于 vim 的拼写建议
 				"hrsh7th/cmp-emoji", --输入: 可以显示表情
 				"hrsh7th/cmp-cmdline", --use cmp-nvim in cmdline
+				"saadparwaiz1/cmp_luasnip",
 				-- "uga-rosa/cmp-dictionary",
 			},
 		})
@@ -92,23 +93,17 @@ return require("packer").startup({
 			"onsails/lspkind-nvim",
 		})
 
-		use({
-			"hrsh7th/cmp-buffer", --从buffer中智能提示
-			"hrsh7th/cmp-nvim-lua", --nvim-cmp source for neovim Lua API.
-			"hrsh7th/cmp-path", --自动提示硬盘上的文件
-			-- "hrsh7th/cmp-calc", --输入数学算式（如1+1=）自动计算
-			-- "f3fora/cmp-spell", --nvim-cmp 的拼写源基于 vim 的拼写建议
-			-- "hrsh7th/cmp-emoji", --输入: 可以显示表情
-			"hrsh7th/cmp-cmdline", --use cmp-nvim in cmdline
-			-- "uga-rosa/cmp-dictionary",
-		})
+		use({ "hrsh7th/cmp-buffer" })
+		use({ "hrsh7th/cmp-nvim-lua" }) --nvim-cmp source for neovim Lua API.
+		use({ "hrsh7th/cmp-path" })
+		use({ "saadparwaiz1/cmp_luasnip" })
+		-- "f3fora/cmp-spell"}) --nvim-cmp 的拼写源基于 vim 的拼写建议
+		-- "hrsh7th/cmp-emoji"}) --输入: 可以显示表情
+		use({ "hrsh7th/cmp-cmdline" })
+
 		-- spell check
-		use({
-			"lewis6991/spellsitter.nvim",
-		})
-		use({
-			"saadparwaiz1/cmp_luasnip",
-		})
+		use({ "lewis6991/spellsitter.nvim" })
+
 		use({
 			"L3MON4D3/LuaSnip",
 			requires = {

@@ -1,6 +1,6 @@
 require("plugins")
 require("Telescope-config")
-require("Treesitter-config")
+require("Treesitter")
 require("ftplugin.init")
 require("barbar-config")
 require("keymappings-config")
