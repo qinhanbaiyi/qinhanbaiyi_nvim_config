@@ -1,120 +1,99 @@
+--                  __                       ____
+--                 /\ \                     /\  _`\           __
+--                 \ \ \      __  __     __ \ \,\L\_\    ___ /\_\  _____
+--                  \ \ \  __/\ \/\ \  /'__`\\/_\__ \  /' _ `\/\ \/\ '__`\
+--                   \ \ \L\ \ \ \_\ \/\ \L\.\_/\ \L\ \/\ \/\ \ \ \ \ \L\ \
+--                    \ \____/\ \____/\ \__/.\_\ `\____\ \_\ \_\ \_\ \ ,__/
+--                     \/___/  \/___/  \/__/\/_/\/_____/\/_/\/_/\/_/\ \ \/
+--                                                                   \ \_\
+--                                                                    \/_/
+
 local ls = require("luasnip")
--- some shorthands...
 local s = ls.snippet
 local sn = ls.snippet_node
+local isn = ls.indent_snippet_node
 local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
 local c = ls.choice_node
 local d = ls.dynamic_node
 local r = ls.restore_node
-local l = require("luasnip.extras").lambda
-local rep = require("luasnip.extras").rep
-local p = require("luasnip.extras").partial
-local m = require("luasnip.extras").match
-local n = require("luasnip.extras").nonempty
-local dl = require("luasnip.extras").dynamic_lambda
-local fmt = require("luasnip.extras.fmt").fmt
-local fmta = require("luasnip.extras.fmt").fmta
+local events = require("luasnip.util.events")
+local ai = require("luasnip.nodes.absolute_indexer")
 local types = require("luasnip.util.types")
-local conds = require("luasnip.extras.expand_conditions")
 
--- If you're reading this file for the first time, best skip to around line 190
--- where the actual snippet-definitions start.
-
--- Every unspecified option will be set to the default.
 ls.config.set_config({
+	-- This tells LuaSnip to remember to keep around the last snippet.
+	-- You can jump back into it even if you move outside of the selection
 	history = true,
-	-- Update more often, :h events for more info.
+
+	-- This one is cool cause if you have dynamic snippets, it updates as you type!
 	updateevents = "TextChanged,TextChangedI",
+
+	-- Autosnippets:
+	enable_autosnippets = true,
+
+	-- Crazy highlights!!
+	-- #vid3
+	-- ext_opts = nil,
 	ext_opts = {
 		[types.choiceNode] = {
 			active = {
-				virt_text = { { "choiceNode", "Comment" } },
+				virt_text = { { " <- Current Choice", "NonTest" } },
 			},
 		},
 	},
-	-- treesitter-hl has 100, use something higher (default is 200).
-	ext_base_prio = 300,
-	-- minimal increase in priority.
-	ext_prio_increase = 1,
-	enable_autosnippets = true,
 })
 
--- args is a table, where 1 is the text in Placeholder 1, 2 the text in
--- placeholder 2,...
-local function copy(args)
-	return args[1]
+local shortcut = function(val)
+	if type(val) == "string" then
+		return { t({ val }), i(0) }
+	end
+
+	if type(val) == "table" then
+		for k, v in ipairs(val) do
+			if type(v) == "string" then
+				val[k] = t({ v })
+			end
+		end
+	end
+
+	return val
 end
 
--- 'recursive' dynamic snippet. Expands to some text followed by itself.
-local rec_ls
-rec_ls = function()
-	return sn(
-		nil,
-		c(1, {
-			-- Order is important, sn(...) first would cause infinite loop of expansion.
-			t(""),
-			sn(nil, { t({ "", "\t\\item " }), i(1), d(2, rec_ls, {}) }),
-		})
-	)
-end
-
--- complicated function for dynamicNode.
-local function jdocsnip(args, _, old_state)
-	-- !!! old_state is used to preserve user-input here. DON'T DO IT THAT WAY!
-	-- Using a restoreNode instead is much easier.
-	-- View this only as an example on how old_state functions.
+local function rustdocsnip(args, _, old_state)
 	local nodes = {
 		t({ "/**", " * " }),
 		i(1, "A short Description"),
 		t({ "", "" }),
 	}
-
-	-- These will be merged with the snippet; that way, should the snippet be updated,
-	-- some user input eg. text can be referred to in the new snippet.
 	local param_nodes = {}
-
 	if old_state then
-		nodes[2] = i(1, old_state.descr:get_text())
+		nodes[2] = i(1, old_state, descr:ger_text())
 	end
 	param_nodes.descr = nodes[2]
 
-	-- At least one param.
-	if string.find(args[2][1], ", ") then
+	-- At least one param
+	if string.find(arg[2][1], ", ", true) then
 		vim.list_extend(nodes, { t({ " * ", "" }) })
 	end
 
 	local insert = 2
-	for indx, arg in ipairs(vim.split(args[2][1], ", ", true)) do
-		-- Get actual name parameter.
+	for _, arg in ipairs(vim.split(arg[2][1], ", ", true)) do
+		-- get actual name parameter.
 		arg = vim.split(arg, " ", true)[2]
 		if arg then
 			local inode
-			-- if there was some text in this parameter, use it as static_text for this new snippet.
 			if old_state and old_state[arg] then
-				inode = i(insert, old_state["arg" .. arg]:get_text())
+				inode = i(insert, old_state["arg" .. arg]:ger_text())
 			else
 				inode = i(insert)
 			end
-			vim.list_extend(nodes, { t({ " * @param " .. arg .. " " }), inode, t({ "", "" }) })
+			vim.list_extend(nodes, { t({ " * @param " .. arg .. "" }), t({ "", "" }) })
 			param_nodes["arg" .. arg] = inode
 
 			insert = insert + 1
 		end
-	end
-
-	if args[1][1] ~= "void" then
-		local inode
-		if old_state and old_state.ret then
-			inode = i(insert, old_state.ret:get_text())
-		else
-			inode = i(insert)
-		end
-
-		vim.list_extend(nodes, { t({ " * ", " * @return " }), inode, t({ "", "" }) })
-		param_nodes.ret = inode
-		insert = insert + 1
 	end
 
 	if vim.tbl_count(args[3]) ~= 1 then
@@ -138,84 +117,119 @@ local function jdocsnip(args, _, old_state)
 	return snip
 end
 
--- Make sure to not pass an invalid command, as io.popen() may write over nvim-text.
-local function bash(_, _, command)
-	local file = io.popen(command, "r")
-	local res = {}
-	for line in file:lines() do
-		table.insert(res, line)
-	end
-	return res
-end
-
--- Returns a snippet_node wrapped around an insert_node whose initial
--- text value is set to the current date in the desired format.
-local date_input = function(args, state, fmt)
-	local fmt = fmt or "%Y-%m-%d"
-	return sn(nil, i(1, os.date(fmt)))
-end
-
-ls.snippets = {
-	all = {
-		-- s("fn", {
-		-- 	-- simple static text.
-		-- 	t("//Parameters: "),
-		-- 	f(copy, 2),
-		-- 	t({
-		-- 		"",
-		-- 		"function",
-		-- 	}),
-		-- 	i(1),
-		-- 	t("("),
-		-- 	i(2, "init foo"),
-		-- 	t({ ") {", "\t" }),
-		-- 	i(0),
-		-- 	t({ "", "}" }),
-		-- }),
-	},
-	lua = {},
-	-- markdown = {
-	-- 	s({
-	-- 		trig = "tb(%d+)*(%d+)",
-	-- 		regTrig = true,
-	-- 		describe = "生成表格",
-	-- 	}, {
-	-- 		-- pos, function, argnodes, user_arg1
-	-- 		d(1, function(args, snip, old_state, initial_text)
-	-- 			local nodes = {}
-	-- 			-- count is nil for invalid input.
-	-- 			local row = snip.captures[1]
-	-- 			local col = snip.captures[2]
-	-- 			-- Make sure there's a number in args[1] and arg[2].
-	-- 			for j = 1, row + 1 do
-	-- 				for k = 1, col do
-	-- 					local iNode
-	-- 					if j == 2 then
-	-- 						iNode = i((j - 1) * col + k, ":-:")
-	-- 					else
-	-- 						iNode = i((j - 1) * col + k, initial_text)
-	-- 					end
-	-- 					nodes[(col * 2 + 1) * (j - 1) + 2 * k] = iNode
-	-- 					nodes[(col * 2 + 1) * (j - 1) + 2 * k - 1] = t("|")
-	-- 				end
-	-- 				-- linebreak
-	-- 				nodes[(col * 2 + 1) * (j - 1) + 2 * col + 1] = t({ "|", "" })
-	-- 			end
-	-- 			local snip = sn(nil, nodes)
-	-- 			-- snip.old_state = old_state
-	-- 			return snip
-	-- 		end, {}, "   "),
-	-- 	}),
-	-- },
-}
-
--- autotriggered snippets have to be defined in a separate table, luasnip.autosnippets.
-ls.autosnippets = {
-	all = {
-		s("autotrigger", {
-			t("autosnippet"),
+local snippets = {}
+-- `all` key means for all filetypes.
+-- Shared between all filetypes. Has lower priority than a particular ft tho
+snippets.all = {
+	s("simple", {
+		t({ "Wow, you were get right!" }),
+	}),
+	s("trigger", {
+		i(1, "First jump"),
+		t(" :: "),
+		sn(2, {
+			i(1, "Second jump"),
+			t(" : "),
+			i(2, "Third jump"),
 		}),
-	},
+	}),
+	s({ trig = "data" }, {
+		f(function()
+			return string.format(string.gsub(vim.bo.commentstring, "%%s", "%%s"), os.date())
+		end, {}),
+	}),
+	s("for", {
+		t("for "),
+		i(1, "k,v"),
+		t(" in "),
+		i(2, "ipairs()"),
+		t({ "do", " " }),
+		t("end"),
+	}),
 }
+snippets.rust = {
+	s({ trig = "fn~", name = "fn~ &self", dscr = "** fn name(&self) **" }, {
+		t("fn "),
+		i(1, "name"),
+		t("(&self, "),
+		i(2, "param"),
+		t(") "),
+		c(3, {
+			t(""),
+			sn(1, { t(" -> "), i(1) }),
+		}),
+		t({ "{", "\t" }),
+		i(4, ""),
+		t({ "\t", "}" }),
+	}),
+	s("cfg", {
+		t({ "#[cfg(test)]", "\t" }),
+		t("mod "),
+		i(1, "module"),
+		t({ "{", "\t" }),
+		i(2),
+		t({ "\t", "}" }),
+	}),
+	s("test", {
+		t({ "#[test]", "\t" }),
+	}),
+	-- s("fndoc", {
+	-- 	d(6, rustdocsnip, { 2, 4, 5 }),
+	-- 	t({ "", "" }),
+	-- 	c(1, {
+	-- 		t(""),
+	-- 		t("pub "),
+	-- 	}),
+	-- 	t("fn "),
+	-- 	i(2, "name"),
+	-- 	c(3, t({ "(" }), t({ "(&self, " })),
+	-- 	i(4, "param"),
+	-- 	t(") "),
+	-- 	c(5, {
+	-- 		t(""),
+	-- 		i("->"),
+	-- 	}),
+	-- 	t({ "{", "\t" }),
+	-- 	i(6, ""),
+	-- 	t({ "\t", "}" }),
+	-- }, {
+	-- 	key = "rust",
+	-- }),
+}
+ls.add_snippets("all", snippets.all, { key = "all" })
+ls.add_snippets("rust", snippets.rust, { key = "rust" })
+-- ls.snippets = snippets
 
-require("luasnip.loaders.from_snipmate").lazy_load() -- Lazy loading
+------------------------------------------------------------------------------------------------
+------------------------------------ KEY MAPPING -----------------------------------------------
+------------------------------------------------------------------------------------------------
+
+-- <c-k> is my expansion key
+-- this will expand the current item or jump to the next item within the snippet.
+local keymap = vim.keymap.set
+keymap({ "i", "s" }, "<c-k>", function()
+	if ls.expand_or_jumpable() then
+		ls.expand_or_jump()
+	end
+end, { silent = true })
+
+-- <c-j> is my jump backwards key.
+-- this always moves to the previous item within the snippet
+keymap({ "i", "s" }, "<c-j>", function()
+	if ls.jumpable(-1) then
+		ls.jump(-1)
+	end
+end, { silent = true })
+
+-- <c-l> is selecting within a list of options.
+-- This is useful for choice nodes (introduced in the forthcoming episode 2)
+keymap("i", "<c-i>", function()
+	if ls.choice_active() then
+		ls.change_choice(1)
+	end
+end)
+
+keymap("i", "<c-u>", require("luasnip.extras.select_choice"))
+
+-- shorcut to source my luasnips file again, which will reload my snippets
+keymap("n", "<leader><leader>s", "<cmd>source ~/.config/nvim/lua/luasnip_snippets/init.lua<CR>")

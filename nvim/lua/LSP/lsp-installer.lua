@@ -25,6 +25,7 @@ lsp_installer.on_server_ready(function(server)
 		opts = vim.tbl_deep_extend("force", {
 			autocmd = false,
 		}, opts)
+		server:setup(opts)
 	elseif server.name == "sumneko_lua" then
 		--lua
 		local runtime_path = vim.split(package.path, ";")
@@ -48,7 +49,15 @@ lsp_installer.on_server_ready(function(server)
 					},
 					workspace = {
 						-- Make the server aware of Neovim runtime files
-						library = vim.api.nvim_get_runtime_file("", true),
+						library = {
+							[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+							[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+						},
+						-- Make the server aware of Neovim runtime files
+						-- library = vim.api.nvim_get_runtime_file("", true),
+						preloadFileSize = 10000,
+						maxPreload = 10000,
+						checkThirdParty = false,
 					},
 					-- Do not send telemetry data containing a randomized but unique identifier
 					telemetry = {
@@ -57,69 +66,29 @@ lsp_installer.on_server_ready(function(server)
 				},
 			},
 		}, opts)
+		server:setup(opts)
 	elseif server.name == "rust_analyzer" then
-		local options = {
-			tools = {
-				autoSetHints = true,
-				inlay_hints = {
-
-					-- Only show inlay hints for the current line
-					only_current_line = false,
-
-					-- Event which triggers a refersh of the inlay hints.
-					-- You can make this "CursorMoved" or "CursorMoved,CursorMovedI" but
-					-- not that this may cause higher CPU usage.
-					-- This option is only respected when only_current_line and
-					-- autoSetHints both are true.
-					only_current_line_autocmd = "CursorHold",
-
-					-- whether to show parameter hints with the inlay hints or not
-					-- default: true
-					show_parameter_hints = true,
-
-					-- whether to show variable name before type hints with the inlay hints or not
-					-- default: false
-					show_variable_name = false,
-
-					-- prefix for parameter hints
-					-- default: "<-"
-					parameter_hints_prefix = "<- ",
-
-					-- prefix for all the other hints (type, chaining)
-					-- default: "=>"
-					other_hints_prefix = "=> ",
-
-					-- whether to align to the lenght of the longest line in the file
-					max_len_align = false,
-
-					-- padding from the left if max_len_align is true
-					max_len_align_padding = 1,
-
-					-- whether to align to the extreme right or not
-					right_align = false,
-
-					-- padding from the right if right_align is true
-					right_align_padding = 7,
-
-					-- The color of the hints
-					highlight = "Comment",
-				},
-			},
-		}
 		require("rust-tools").setup({
 			-- The "server" property provided in rust-tools setup function are the
 			-- settings rust-tools will provide to lspconfig during init.            --
 			-- We merge the necessary settings from nvim-lsp-installer (server:get_default_options())
 			-- with the user's own settings (opts).
 			server = vim.tbl_deep_extend("force", server:get_default_options(), opts),
-			options,
+			tools = {
+				autoSetHints = true,
+				inlay_hints = {
+					show_parameter_hints = true,
+					show_variable_name = false,
+					highlight = "Comment",
+				},
+			},
 		})
 		server:attach_buffers()
 		-- Only if standalone support is needed
 		-- require("rust-tools").start_standalone_if_required()
+	else
+		server:setup(opts)
 	end
-
-	server:setup(opts)
 end)
 
 -- Latex Preview
