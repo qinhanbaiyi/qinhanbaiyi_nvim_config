@@ -31,6 +31,12 @@ return require("packer").startup({
 			"nvim-treesitter/nvim-treesitter",
 			run = ":TSUpdate",
 		})
+		use({
+			"lewis6991/spellsitter.nvim",
+			config = function()
+				require("spellsitter").setup()
+			end,
+		})
 
 		-- Nvim-tree
 		use({
@@ -100,9 +106,6 @@ return require("packer").startup({
 		-- "f3fora/cmp-spell"}) --nvim-cmp 的拼写源基于 vim 的拼写建议
 		-- "hrsh7th/cmp-emoji"}) --输入: 可以显示表情
 		use({ "hrsh7th/cmp-cmdline" })
-
-		-- spell check
-		use({ "lewis6991/spellsitter.nvim" })
 
 		use({
 			"L3MON4D3/LuaSnip",

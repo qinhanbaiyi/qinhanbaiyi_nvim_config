@@ -2,6 +2,8 @@ local keymap = vim.keymap.set
 vim.g.mapleader = " "
 
 keymap("n", "<Space>", "<NOP>", { noremap = true, silent = true })
+keymap("s", "<c-u>", "<NOP>", { noremap = true, silent = true })
+keymap("s", "<c-i>", "<NOP>", { noremap = true, silent = true })
 
 -- W -> :w
 keymap("n", "W", ":w<CR>", { noremap = true, silent = true })
