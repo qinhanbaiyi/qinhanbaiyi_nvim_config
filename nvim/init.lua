@@ -1,32 +1,8 @@
--- require("plugins")
--- require("Telescope-config")
--- require("Treesitter")
--- require("ftplugin.init")
--- require("barbar-config")
--- require("keymappings-config")
--- require("LSP")
--- require("nvim-cmp")
--- require("nvim-autopair")
--- require("luasnip_snippets")
--- require("nvim-comment")
--- require("nvim-foldtext")
--- require("nvim-formatter")
--- require("nvim-glow-markdown")
--- require("nvim-null-ls")
--- require("nvim-prettier")
--- require("nvim-sniprun")
--- require("nvim-spellcheck")
--- require("nvim-symbols-outline")
--- require("nvim-toggleterm")
--- require("nvim_setting-config")
--- require("texmagic-config")
--- require("web-devicons-config")
--- require("Which-key-config")
-
 local M = {
 	"plugins",
 	"Telescope-config",
 	"Treesitter",
+	"Neogen",
 	"ftplugin.init",
 	"barbar-config",
 	"keymappings-config",
@@ -48,6 +24,7 @@ local M = {
 	"texmagic-config",
 	"web-devicons-config",
 	"Which-key-config",
+	"theme",
 }
 
 for _, mod in ipairs(M) do

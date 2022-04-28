@@ -92,7 +92,7 @@ lsp_installer.on_server_ready(function(server)
 end)
 
 -- Latex Preview
-require("lspconfig").texlab.setup({})
+-- require("lspconfig").texlab.setup({})
 
 -- rust
 -- require("lspconfig").rust_analyzer.setup({

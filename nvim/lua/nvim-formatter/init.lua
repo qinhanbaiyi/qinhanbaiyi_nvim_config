@@ -90,6 +90,15 @@ require("formatter").setup({
 				}
 			end,
 		},
+		tex = {
+			function()
+				return {
+					exe = "latexindent",
+					args = { "-" },
+					stdin = true,
+				}
+			end,
+		},
 	},
 })
 ----------------------------------------------------------------------
@@ -108,6 +117,7 @@ augroup FormatAutogroup
   autocmd BufWritePost *.c FormatWrite
   autocmd BufWritePost *.cpp FormatWrite
   autocmd BufWritePost *.json FormatWrite
+  autocmd BufWritePost *.tex FormatWrite
 augroup END
 ]],
 	true
