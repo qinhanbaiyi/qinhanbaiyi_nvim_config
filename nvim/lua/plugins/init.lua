@@ -1,10 +1,3 @@
-require("packer").reset({
-
-	git = {
-		default_url_format = "https://github.com/%s", -- Lua format string used for "aaa/bbb" style plugins
-		-- default_url_format = "https://gitclone/github.com/%s", -- Lua format string used for "aaa/bbb" style plugins
-	},
-})
 local execute = vim.api.nvim_command
 local fn = vim.fn
 
@@ -36,6 +29,10 @@ return require("packer").startup({
 			config = function()
 				require("spellsitter").setup()
 			end,
+		})
+		use({
+			-- Neogen - Your Annotation Toolkit
+			"danymat/neogen",
 		})
 
 		-- Nvim-tree
@@ -72,6 +69,7 @@ return require("packer").startup({
 			-- Theme inspired by Atom
 			{ "joshdick/onedark.vim" }
 		)
+		use("projekt0n/github-nvim-theme")
 		-- Fancier statusline
 		use({ "itchyny/lightline.vim" })
 
@@ -125,6 +123,7 @@ return require("packer").startup({
 
 		-- Format plugs
 		use({ "nvim-lua/plenary.nvim" })
+		-- use({ "p00f/cphelper.nvim" })
 		use({ "mhartington/formatter.nvim" })
 		use({ "jose-elias-alvarez/null-ls.nvim" })
 		use({ "MunifTanjim/prettier.nvim" })
@@ -154,9 +153,6 @@ return require("packer").startup({
 		-- rust-tools
 		use({ "simrat39/rust-tools.nvim" })
 
-		--  代码函数注释插件
-		use("heavenshell/vim-pydocstring")
-
 		-- 代码折叠插件
 		use({
 			"anuvyklack/pretty-fold.nvim",
@@ -165,9 +161,6 @@ return require("packer").startup({
 				require("pretty-fold.preview").setup()
 			end,
 		})
-		-- use("tmhedberg/SimpylFold")
-		-- use("Konfekt/FastFold")
-		-- use("zhimsel/vim-stay")
 
 		use(
 			-- show function
@@ -181,6 +174,12 @@ return require("packer").startup({
 		use("tpope/vim-surround")
 
 		use({ "michaelb/sniprun", run = "bash ./install.sh" })
+
+		-- make us pay attention to work
+		use({ "junegunn/goyo.vim" })
+
+		-- Code Debug
+		use("mfussenegger/nvim-dap")
 	end,
 	config = {
 		display = {
@@ -190,5 +189,8 @@ return require("packer").startup({
 				})
 			end,
 		},
+		-- git = {
+		-- 	default_url_format = "git@github.com:%s",
+		-- },
 	},
 })
