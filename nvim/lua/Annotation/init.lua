@@ -1,10 +1,10 @@
 local M = {
-	"theme.github",
+	"Annotation.Neogen",
+	"Annotation.comment",
 }
-
 for _, mod in ipairs(M) do
 	local ok, err = pcall(require, mod)
 	if not ok then
-		print("Err in calling theme: ", err)
+		print("Error while call Anno module: ", err)
 	end
 end

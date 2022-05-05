@@ -13,6 +13,37 @@ local ai = require("luasnip.nodes.absolute_indexer")
 local types = require("luasnip.util.types")
 local fmt = require("luasnip.extras.fmt").fmt
 
+local enumfn = function()
+	return "1. "
+end
+local enum = function()
+	local i = 1
+	return sn(nil, {
+		c(1, {
+			t({ "" }),
+			sn(nil, {
+				f(enumfn),
+			}),
+		}),
+	})
+end
+
+local rec_ls
+rec_ls = function()
+	return sn(nil, {
+		c(1, {
+			-- important!! Having the sn(...) as the first choice will cause infinite recursion.
+			t({ "" }),
+			-- The same dynamicNode as in the snippet (also note: self reference).
+			sn(nil, {
+				t({ "", "[] " }),
+				i(1),
+				d(2, rec_ls, {}),
+			}),
+		}),
+	})
+end
+
 local markdown = {}
 markdown = {
 	s("bash", {
@@ -54,6 +85,19 @@ markdown = {
 		t(")"),
 		i(0),
 	}),
+	s("task", {
+		t({ "-- task", "[] " }),
+		i(1),
+		d(2, rec_ls, {}),
+		t({ "", "" }),
+		i(0),
+	}),
+	-- s({ trig = "enum", name = "enumarize", dscr = "1. ... 2. ..." }, {
+	-- 	d(1, function(args, snip, old_state)
+	-- 		local index = 1
+	--
+	-- 	end),
+	-- }),
 	s({ trig = "image", name = "markdown style", dscr = "markdown style" }, {
 		t("!["),
 		i(1, "alias"),

@@ -1,15 +1,4 @@
 local ls = require("luasnip")
-local s = ls.snippet
-local sn = ls.snippet_node
-local isn = ls.indent_snippet_node
-local t = ls.text_node
-local i = ls.insert_node
-local f = ls.function_node
-local c = ls.choice_node
-local d = ls.dynamic_node
-local r = ls.restore_node
-local events = require("luasnip.util.events")
-local ai = require("luasnip.nodes.absolute_indexer")
 local types = require("luasnip.util.types")
 
 ls.config.set_config({
@@ -37,12 +26,11 @@ ls.config.set_config({
 
 local snippets = {}
 snippets = {
-	all = require("luasnip_snippets.snippets.all"),
-	-- all = require("luasnip_snippets.snippets.all"),
-	lua = require("luasnip_snippets.snippets.lua"),
-	rust = require("luasnip_snippets.snippets.rust"),
-	markdown = require("luasnip_snippets.snippets.markdown"),
-	latex = require("luasnip_snippets.snippets.latex"),
+	all = require("Snippets.snippets.all"),
+	lua = require("Snippets.snippets.lua"),
+	rust = require("Snippets.snippets.rust"),
+	markdown = require("Snippets.snippets.markdown"),
+	latex = require("Snippets.snippets.latex"),
 }
 ls.add_snippets("all", snippets.all, { key = "all" })
 ls.add_snippets("rust", snippets.rust, { key = "rust" })
