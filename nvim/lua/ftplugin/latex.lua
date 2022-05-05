@@ -42,3 +42,6 @@ cmp.setup({
 		}),
 	},
 })
+
+-- Texmagic
+vim.g["tex_flavor"] = "latex"

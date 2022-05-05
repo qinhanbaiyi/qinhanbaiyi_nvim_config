@@ -197,8 +197,8 @@ cmp.setup({
 		["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "s" }),
 	},
 	sources = {
-		{ name = "nvim_lsp" },
-		{ name = "luasnip" },
+		{ name = "nvim_lsp", group_index = 1, priority = 1 },
+		{ name = "luasnip", group_index = 1, priority = 1 },
 		{
 			name = "buffer",
 			keyword_length = 2,
@@ -211,12 +211,17 @@ cmp.setup({
 					return vim.tbl_keys(bufs)
 				end,
 			},
+			group_index = 2,
 		},
 		{ name = "path" },
 		--{name = "cmp_tabnine"},
 		--{name = "calc"},
 		--{name = "spell"},
 		--{name = "emoji"}
+	},
+	window = {
+		completion = cmp.config.window.bordered(),
+		documentation = cmp.config.window.bordered(),
 	},
 })
 

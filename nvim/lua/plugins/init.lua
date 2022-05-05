@@ -97,6 +97,7 @@ return require("packer").startup({
 			"onsails/lspkind-nvim",
 		})
 
+		use({ "github/copilot.vim" })
 		use({ "hrsh7th/cmp-buffer" })
 		use({ "hrsh7th/cmp-nvim-lua" }) --nvim-cmp source for neovim Lua API.
 		use({ "hrsh7th/cmp-path" })
