@@ -137,37 +137,6 @@ local lspkind1 = {
 	}),
 }
 
-------修复2021年10月12日 nvim-cmp.luaattempt to index field 'menu' (a nil value)---------
---重写插件方法,为了实现function 后,自动追加()
-local keymap = require("cmp.utils.keymap")
-cmp.confirm = function(option)
-	option = option or {}
-	local e = cmp.core.view:get_selected_entry() or (option.select and cmp.core.view:get_first_entry() or nil)
-	if e then
-		cmp.core:confirm(e, {
-			behavior = option.behavior,
-		}, function()
-			local myContext = cmp.core:get_context({ reason = cmp.ContextReason.TriggerOnly })
-			cmp.core:complete(myContext)
-			--function() 自动增加()
-			if
-				e
-				and e.resolved_completion_item
-				and (e.resolved_completion_item.kind == 3 or e.resolved_completion_item.kind == 2)
-			then
-				vim.api.nvim_feedkeys(keymap.t("()<Left>"), "n", true)
-			end
-		end)
-		return true
-	else
-		if vim.fn.complete_info({ "selected" }).selected ~= -1 then
-			keymap.feedkeys(keymap.t("<C-y>"), "n")
-			return true
-		end
-		return false
-	end
-end
-
 -------------------------------------------------------------------------------
 --------------------------------- SETTING -------------------------------------
 -------------------------------------------------------------------------------
@@ -184,7 +153,7 @@ cmp.setup({
 		["<C-f>"] = cmp.mapping.scroll_docs(4),
 		["<C-e>"] = cmp.mapping.close(),
 		["<CR>"] = cmp.mapping.confirm({
-			behavior = cmp.ConfirmBehavior.Replace,
+			-- behavior = cmp.ConfirmBehavior.Replace,
 			select = false,
 		}),
 		["<Tab>"] = function(fallback)
@@ -197,8 +166,8 @@ cmp.setup({
 		["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "s" }),
 	},
 	sources = {
-		{ name = "nvim_lsp", group_index = 1, priority = 1 },
-		{ name = "luasnip", group_index = 1, priority = 1 },
+		{ name = "nvim_lsp", group_index = 1, priority = 80 },
+		{ name = "luasnip", group_index = 1, priority = 80 },
 		{
 			name = "buffer",
 			keyword_length = 2,
@@ -211,7 +180,7 @@ cmp.setup({
 					return vim.tbl_keys(bufs)
 				end,
 			},
-			group_index = 2,
+			group_index = 1,
 		},
 		{ name = "path" },
 		--{name = "cmp_tabnine"},

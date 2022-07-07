@@ -70,7 +70,6 @@ time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
   ["Comment.nvim"] = {
-    config = { "\27LJ\2\0025\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fComment\frequire\0" },
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/Comment.nvim",
     url = "https://github.com/numToStr/Comment.nvim"
@@ -79,6 +78,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/LuaSnip",
     url = "https://github.com/L3MON4D3/LuaSnip"
+  },
+  ["auto-session"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/auto-session",
+    url = "https://github.com/rmagatti/auto-session"
   },
   ["barbar.nvim"] = {
     loaded = true,
@@ -130,11 +134,6 @@ _G.packer_plugins = {
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
     url = "https://github.com/saadparwaiz1/cmp_luasnip"
   },
-  ["copilot.vim"] = {
-    loaded = true,
-    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/copilot.vim",
-    url = "https://github.com/github/copilot.vim"
-  },
   ["formatter.nvim"] = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/formatter.nvim",
@@ -149,6 +148,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/github-nvim-theme",
     url = "https://github.com/projekt0n/github-nvim-theme"
+  },
+  ["gitsigns.nvim"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
+    url = "https://github.com/lewis6991/gitsigns.nvim"
   },
   ["glow.nvim"] = {
     loaded = true,
@@ -174,6 +178,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lsp-colors.nvim",
     url = "https://github.com/folke/lsp-colors.nvim"
+  },
+  ["lsp_signature.nvim"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lsp_signature.nvim",
+    url = "https://github.com/ray-x/lsp_signature.nvim"
   },
   ["lspkind-nvim"] = {
     loaded = true,
@@ -221,7 +230,6 @@ _G.packer_plugins = {
     url = "https://github.com/neovim/nvim-lspconfig"
   },
   ["nvim-tree.lua"] = {
-    config = { "\27LJ\2\2;\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\14nvim-tree\frequire\0" },
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/nvim-tree.lua",
     url = "https://github.com/kyazdani42/nvim-tree.lua"
@@ -256,12 +264,6 @@ _G.packer_plugins = {
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/prettier.nvim",
     url = "https://github.com/MunifTanjim/prettier.nvim"
   },
-  ["pretty-fold.nvim"] = {
-    config = { "\27LJ\2\2e\0\0\2\0\4\0\f6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\0016\0\0\0'\1\3\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\24pretty-fold.preview\nsetup\16pretty-fold\frequire\0" },
-    loaded = true,
-    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/pretty-fold.nvim",
-    url = "https://github.com/anuvyklack/pretty-fold.nvim"
-  },
   ["rust-tools.nvim"] = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/rust-tools.nvim",
@@ -273,7 +275,7 @@ _G.packer_plugins = {
     url = "https://github.com/michaelb/sniprun"
   },
   ["spellsitter.nvim"] = {
-    config = { "\27LJ\2\0029\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\16spellsitter\frequire\0" },
+    config = { "\27LJ\2\n9\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\16spellsitter\frequire\0" },
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/spellsitter.nvim",
     url = "https://github.com/lewis6991/spellsitter.nvim"
@@ -328,20 +330,8 @@ _G.packer_plugins = {
 time([[Defining packer_plugins]], false)
 -- Config for: spellsitter.nvim
 time([[Config for spellsitter.nvim]], true)
-try_loadstring("\27LJ\2\0029\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\16spellsitter\frequire\0", "config", "spellsitter.nvim")
+try_loadstring("\27LJ\2\n9\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\16spellsitter\frequire\0", "config", "spellsitter.nvim")
 time([[Config for spellsitter.nvim]], false)
--- Config for: Comment.nvim
-time([[Config for Comment.nvim]], true)
-try_loadstring("\27LJ\2\0025\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fComment\frequire\0", "config", "Comment.nvim")
-time([[Config for Comment.nvim]], false)
--- Config for: pretty-fold.nvim
-time([[Config for pretty-fold.nvim]], true)
-try_loadstring("\27LJ\2\2e\0\0\2\0\4\0\f6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\0016\0\0\0'\1\3\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\24pretty-fold.preview\nsetup\16pretty-fold\frequire\0", "config", "pretty-fold.nvim")
-time([[Config for pretty-fold.nvim]], false)
--- Config for: nvim-tree.lua
-time([[Config for nvim-tree.lua]], true)
-try_loadstring("\27LJ\2\2;\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\14nvim-tree\frequire\0", "config", "nvim-tree.lua")
-time([[Config for nvim-tree.lua]], false)
 if should_profile then save_profiles() end
 
 end)

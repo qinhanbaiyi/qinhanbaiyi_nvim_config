@@ -3,15 +3,16 @@ local M = {
 	"Telescope-config",
 	"Treesitter",
 	"nvim-setting",
-	"LSP",
 	"Annotation",
 	"CMP",
 	"Snippets",
 	"Term",
 	"Which-key-config",
 	"Theme",
+	"LSP",
 	"Dap",
 	"ftplugin.init",
+	"Git",
 }
 
 for _, mod in ipairs(M) do

@@ -8,6 +8,8 @@ local lsp_modules = {
 	"LSP.null-ls",
 	"LSP.prettier",
 	"LSP.formatter",
+	"LSP.setting",
+	"LSP.signature",
 }
 for _, mod in ipairs(lsp_modules) do
 	local ok, err = pcall(require, mod)

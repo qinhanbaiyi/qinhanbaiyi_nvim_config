@@ -110,22 +110,23 @@ vim.cmd([[ autocmd BufRead,BufNewFile *.org set filetype=org ]])
 -- require("lspconfig").pylsp.setup({})
 
 -- R LSP
-require("lspconfig").r_language_server.setup({
-	-- cmd = {
-	-- 	"R",
-	-- 	"--slave",
-	-- 	"-e",
-	-- 	[[
-	--      .libPaths(new = "~/.local/share/nvim/lsp_servers/r_language_server");
-	--      langserver <- languageserver:::LanguageServer$new("localhost", NULL);
-	--      .libPaths(new = Sys.getenv("R_LIBS_USER"));
-	--      langserver$run()
-	--    ]],
-	-- },
-})
+-- require("lspconfig").r_language_server.setup({
+-- cmd = {
+-- 	"R",
+-- 	"--slave",
+-- 	"-e",
+-- 	[[
+--      .libPaths(new = "~/.local/share/nvim/lsp_servers/r_language_server");
+--      langserver <- languageserver:::LanguageServer$new("localhost", NULL);
+--      .libPaths(new = Sys.getenv("R_LIBS_USER"));
+--      langserver$run()
+--    ]],
+-- },
+-- })
 
 -- vim LSP
-require("lspconfig").vimls.setup({})
+
+-- require("lspconfig").vimls.setup({})
 --require'lspconfig'.pyright.setup{}
 --local nvim_lsp = require('lspconfig')
 --typescript支持

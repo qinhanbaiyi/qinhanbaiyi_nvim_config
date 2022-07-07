@@ -117,7 +117,7 @@ augroup FormatAutogroup
   autocmd BufWritePost *.c FormatWrite
   autocmd BufWritePost *.cpp FormatWrite
   autocmd BufWritePost *.json FormatWrite
-  autocmd BufWritePost *.tex FormatWrite
+  " autocmd BufWritePost *.tex FormatWrite
 augroup END
 ]],
 	true
