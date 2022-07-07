@@ -5,7 +5,8 @@ local M = {
 	"Theme.symbols-outline",
 	"Theme.indent",
 	"Theme.lightline",
-	"Theme.foldtext",
+	"Theme.nvim-tree",
+	"Theme.autosession",
 }
 
 for _, mod in ipairs(M) do
@@ -14,4 +15,4 @@ for _, mod in ipairs(M) do
 		print("Err in calling theme: ", err)
 	end
 end
-vim.cmd([[colorscheme github_dark]])
+-- vim.cmd([[colorscheme onedark]])

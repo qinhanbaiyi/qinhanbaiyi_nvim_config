@@ -22,7 +22,7 @@ return require("packer").startup({
 		-- Treesitter
 		use({
 			"nvim-treesitter/nvim-treesitter",
-			run = ":TSUpdate",
+			run = ":TSInstallFromGrammar",
 		})
 		use({
 			"lewis6991/spellsitter.nvim",
@@ -39,9 +39,6 @@ return require("packer").startup({
 		use({
 			"kyazdani42/nvim-tree.lua",
 			requires = "kyazdani42/nvim-web-devicons",
-			config = function()
-				require("nvim-tree").setup({})
-			end,
 		})
 
 		-- TEX
@@ -59,10 +56,14 @@ return require("packer").startup({
 		use({ "tami5/lspsaga.nvim" })
 		use({ "williamboman/nvim-lsp-installer" })
 		use({ "folke/lsp-colors.nvim" })
+		use({ "ray-x/lsp_signature.nvim" })
 
 		-- Telescope and it's extensions
 		use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" } })
 		use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
+
+		-- Git
+		use({ "lewis6991/gitsigns.nvim" })
 
 		-- UI
 		use(
@@ -97,7 +98,6 @@ return require("packer").startup({
 			"onsails/lspkind-nvim",
 		})
 
-		use({ "github/copilot.vim" })
 		use({ "hrsh7th/cmp-buffer" })
 		use({ "hrsh7th/cmp-nvim-lua" }) --nvim-cmp source for neovim Lua API.
 		use({ "hrsh7th/cmp-path" })
@@ -113,13 +113,14 @@ return require("packer").startup({
 				"rafamadriz/friendly-snippets", --代码段合集
 			},
 		})
+		use({ "rafamadriz/friendly-snippets" })
 
 		-- Comment
 		use({
 			"numToStr/Comment.nvim",
-			config = function()
-				require("Comment").setup()
-			end,
+			-- config = function()
+			-- 	require("Comment").setup()
+			-- end,
 		})
 
 		-- Format plugs
@@ -142,7 +143,7 @@ return require("packer").startup({
 		-- barbar plugin, which makes tags upper windows
 		use({ "romgrk/barbar.nvim" })
 
-		use({ "akinsho/toggleterm.nvim" })
+		use({ "akinsho/toggleterm.nvim", tag = "v1.*" })
 
 		-- show the history of change
 		use({ "mbbill/undotree" })
@@ -154,19 +155,8 @@ return require("packer").startup({
 		-- rust-tools
 		use({ "simrat39/rust-tools.nvim" })
 
-		-- 代码折叠插件
-		use({
-			"anuvyklack/pretty-fold.nvim",
-			config = function()
-				require("pretty-fold").setup({})
-				require("pretty-fold.preview").setup()
-			end,
-		})
-
-		use(
-			-- show function
-			"liuchengxu/vista.vim"
-		)
+		-- show function
+		use("liuchengxu/vista.vim")
 		use( --show functional variables
 			"simrat39/symbols-outline.nvim"
 		)
@@ -181,6 +171,9 @@ return require("packer").startup({
 
 		-- Code Debug
 		use("mfussenegger/nvim-dap")
+
+		-- session
+		use({ "rmagatti/auto-session" })
 	end,
 	config = {
 		display = {

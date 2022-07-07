@@ -36,7 +36,7 @@ rec_ls = function()
 			t({ "" }),
 			-- The same dynamicNode as in the snippet (also note: self reference).
 			sn(nil, {
-				t({ "", "[] " }),
+				t({ "", "- [ ] " }),
 				i(1),
 				d(2, rec_ls, {}),
 			}),
@@ -76,6 +76,11 @@ markdown = {
 		i(1),
 		t({ "", "```" }),
 	}),
+	s("latex", {
+		t({ "```latex", "" }),
+		i(1),
+		t({ "", "```" }),
+	}),
 	s("url", {
 		t("["),
 		i(1, "alias"),
@@ -85,13 +90,18 @@ markdown = {
 		t(")"),
 		i(0),
 	}),
-	s("task", {
-		t({ "-- task", "[] " }),
+	s("ts", {
+		t("- [ ] "),
 		i(1),
-		d(2, rec_ls, {}),
 		t({ "", "" }),
-		i(0),
 	}),
+	-- s("task", {
+	-- 	t({ "-- task", "- [ ] " }),
+	-- 	i(1),
+	-- 	d(2, rec_ls, {}),
+	-- 	t({ "", "" }),
+	-- 	i(0),
+	-- }),
 	-- s({ trig = "enum", name = "enumarize", dscr = "1. ... 2. ..." }, {
 	-- 	d(1, function(args, snip, old_state)
 	-- 		local index = 1
