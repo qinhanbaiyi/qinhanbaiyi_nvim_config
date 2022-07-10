@@ -73,7 +73,7 @@ return require("packer").startup({
 		)
 		use("projekt0n/github-nvim-theme")
 		-- Fancier statusline
-		use({ "itchyny/lightline.vim" })
+		use({ "nvim-lualine/lualine.nvim" })
 
 		-- CMP
 		use({
