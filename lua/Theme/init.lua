@@ -4,7 +4,8 @@ local M = {
 	"Theme.web-devicons",
 	"Theme.symbols-outline",
 	"Theme.indent",
-	"Theme.lightline",
+	-- "Theme.lightline",
+	"Theme.lualine",
 	"Theme.nvim-tree",
 	"Theme.autosession",
 }
