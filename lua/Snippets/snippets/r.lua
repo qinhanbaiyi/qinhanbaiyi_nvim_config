@@ -9,6 +9,7 @@ local f = ls.function_node
 local c = ls.choice_node
 local d = ls.dynamic_node
 local r = ls.restore_node
+local rep = require("luasnip.extras").rep
 local events = require("luasnip.util.events")
 local ai = require("luasnip.nodes.absolute_indexer")
 local fmt = require("luasnip.extras.fmt").fmt
@@ -17,6 +18,7 @@ local lambda = require("luasnip.extras").l
 local postfix = require("luasnip.extras.postfix").postfix
 
 local M = {}
+
 local function lines(args, parent, old_state, initial_text)
 	local nodes = {}
 	old_state = old_state or {}
@@ -54,6 +56,10 @@ local function lines(args, parent, old_state, initial_text)
 	return snip
 end
 
+local function get_space_str(number_of_spaces)
+	return string.format("%%-%ds", number_of_spaces):format("")
+end
+
 M = {
 	s("pp", {
 		isn(1, t({ "%>%", "" }), "\t"),
@@ -64,48 +70,56 @@ M = {
 	s("e", {
 		t("<- "),
 	}),
-	s("func", {
-		t("func <- function("),
-		i(1),
-		t({ ") {", "\t" }),
-		f(function(args, snip)
-			local tags = {}
-			table.insert(tags, "# Args: " .. args[1][1] .. "")
-			table.insert(tags, "\t# Return: " .. "")
-			return tags
-		end, { 1 }, {}),
-		t({ "", "\t" }),
-		i(2),
-		t({ "", "}" }),
-	}),
+	-- s("func", {
+	-- 	t("func <- function("),
+	-- 	i(1),
+	-- 	t({ ") {", "\t" }),
+	-- 	f(function(args, snip)
+	-- 		local tags = {}
+	-- 		table.insert(tags, "# Args: " .. args[1][1] .. "")
+	-- 		table.insert(tags, "\t# Return: " .. "")
+	-- 		return tags
+	-- 	end, { 1 }, {}),
+	-- 	t({ "", "\t" }),
+	-- 	i(2),
+	-- 	t({ "", "}" }),
+	-- }),
 	s("trig", {
 		i(1, "1"),
 		-- pos, function, argnodes, opts (containing the user_arg).
 		d(2, lines, { 1 }, { user_args = { "what waht" } }),
 	}),
 	-- @WRAN
-	-- s({ "func" }, {
-	-- 	fmt(
-	-- 		[[
-	-- 	func <- function({args}) {
-	-- 	    {doc}
-	-- 	    {body}
-	-- 	}
-	-- 	]],
-	-- 		{
-	-- 			args = i(1),
-	-- 			doc = isn(2, {
-	-- 				fmt(
-	-- 					[[
-	-- 			# Args: {args}
-	-- 			# Returns: {ret}
-	-- 			]],
-	-- 					{ args = ai(1), ret = i(1) }
-	-- 				),
-	-- 			}),
-	-- 			body = i(0),
-	-- 		}
-	-- 	),
+	s(
+		"func",
+		fmt(
+			[[
+		# '@Desc: {}
+		# '@Params: {}
+		# '@Return: {}
+		func <- function({}) {{
+		{}{}
+		}}
+		]],
+			{
+				i(3),
+				rep(1),
+				i(4),
+				i(1),
+				t(get_space_str(4)),
+				i(2),
+			}
+		)
+	),
+	-- s("func", {
+	-- 	t("func <- function("),
+	-- 	i(1),
+	-- 	t({ ") {", "\t" }),
+	-- 	d(2, function(args, snip, user_arg1)
+	-- 		local out = {}
+	-- 		out[1] = "# Args: " .. args[1]
+	-- 		out[2] = user_arg1
+	-- 	end, { 1 }),
 	-- }),
 }
 
