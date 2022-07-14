@@ -45,4 +45,10 @@ require("nvim-treesitter.configs").setup({
 		highlight_current_scope = { enable = false },
 	},
 })
+local keymaps = vim.keymap.set
+keymaps("n", "<leader>tr", function()
+	local currentft = vim.bo.filetype
+	return vim.treesitter.get_parser(0, currentft)
+end)
+
 require("spellsitter").setup()

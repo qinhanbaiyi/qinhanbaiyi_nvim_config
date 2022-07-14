@@ -22,7 +22,7 @@ local signature = {
 	floating_window_off_y = 1, -- adjust float windows y position.
 
 	fix_pos = false, -- set to true, the floating window will not auto-close until finish all parameters
-	hint_enable = false, -- virtual hint enable
+	hint_enable = true, -- virtual hint enable
 	hint_prefix = "🐼 ", -- Panda for parameter
 	hint_scheme = "String",
 	hi_parameter = "LspSignatureActiveParameter", -- how your parameter will be highlight

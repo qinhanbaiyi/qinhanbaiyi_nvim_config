@@ -1,7 +1,12 @@
 local M = {}
 M = {
-	"Debug.rust",
-	"Debug.python",
+	"Dap.lang.rust",
+	"Dap.lang.python",
+	"Dap.lang.cpp",
+	"Dap.lang.r",
+	"Dap.lang.lua",
+	"Dap.lang.ui",
+	"Dap.lang.config",
 }
 
 for _, mod in ipairs(M) do

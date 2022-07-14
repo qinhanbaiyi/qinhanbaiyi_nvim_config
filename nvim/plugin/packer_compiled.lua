@@ -169,11 +169,6 @@ _G.packer_plugins = {
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/indent-blankline.nvim",
     url = "https://github.com/lukas-reineke/indent-blankline.nvim"
   },
-  ["lightline.vim"] = {
-    loaded = true,
-    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lightline.vim",
-    url = "https://github.com/itchyny/lightline.vim"
-  },
   ["lsp-colors.nvim"] = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lsp-colors.nvim",
@@ -193,6 +188,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lspsaga.nvim",
     url = "https://github.com/tami5/lspsaga.nvim"
+  },
+  ["lualine.nvim"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lualine.nvim",
+    url = "https://github.com/nvim-lualine/lualine.nvim"
   },
   neogen = {
     loaded = true,
@@ -219,6 +219,11 @@ _G.packer_plugins = {
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/nvim-dap",
     url = "https://github.com/mfussenegger/nvim-dap"
   },
+  ["nvim-dap-ui"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/nvim-dap-ui",
+    url = "https://github.com/rcarriga/nvim-dap-ui"
+  },
   ["nvim-lsp-installer"] = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/nvim-lsp-installer",
@@ -243,6 +248,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
     url = "https://github.com/kyazdani42/nvim-web-devicons"
+  },
+  ["one-small-step-for-vimkind"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/one-small-step-for-vimkind",
+    url = "https://github.com/jbyuki/one-small-step-for-vimkind"
   },
   ["onedark.vim"] = {
     loaded = true,
@@ -304,6 +314,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/undotree",
     url = "https://github.com/mbbill/undotree"
+  },
+  ["vim-illuminate"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/vim-illuminate",
+    url = "https://github.com/RRethy/vim-illuminate"
   },
   ["vim-surround"] = {
     loaded = true,
