@@ -32,6 +32,7 @@ snippets = {
 	markdown = require("Snippets.snippets.markdown"),
 	latex = require("Snippets.snippets.latex"),
 	r = require("Snippets.snippets.r"),
+	python = require("Snippets.snippets.python"),
 }
 ls.add_snippets("all", snippets.all, { key = "all" })
 ls.add_snippets("rust", snippets.rust, { key = "rust" })
@@ -39,3 +40,4 @@ ls.add_snippets("lua", snippets.lua, { key = "lua" })
 ls.add_snippets("markdown", snippets.markdown, { key = "markdown" })
 ls.add_snippets("tex", snippets.latex, { key = "tex" })
 ls.add_snippets("r", snippets.r, { key = "r" })
+ls.add_snippets("python", snippets.python, { key = "python" })

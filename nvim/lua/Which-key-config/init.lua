@@ -137,6 +137,9 @@ wk.register({
 		gr = { "<cmd>Lspsaga rename<CR>", "Rename" },
 		gs = { "<cmd>Lspsaga signature_help<CR>", "SignatureHelp" },
 		gh = { "<cmd>Lspsaga hover_doc<CR>", "Lsp Hover" },
+		h = {
+			name = "Gitsigns",
+		},
 	},
 	["<leader><leader>"] = {
 		name = "Windows Movement",

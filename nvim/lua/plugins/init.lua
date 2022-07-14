@@ -57,6 +57,7 @@ return require("packer").startup({
 		use({ "williamboman/nvim-lsp-installer" })
 		use({ "folke/lsp-colors.nvim" })
 		use({ "ray-x/lsp_signature.nvim" })
+		use({ "RRethy/vim-illuminate" }) -- highlight the word under the cursor
 
 		-- Telescope and it's extensions
 		use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" } })
@@ -72,7 +73,7 @@ return require("packer").startup({
 		)
 		use("projekt0n/github-nvim-theme")
 		-- Fancier statusline
-		use({ "itchyny/lightline.vim" })
+		use({ "nvim-lualine/lualine.nvim" })
 
 		-- CMP
 		use({
@@ -171,6 +172,8 @@ return require("packer").startup({
 
 		-- Code Debug
 		use("mfussenegger/nvim-dap")
+		use({ "rcarriga/nvim-dap-ui", requires = { "mfussenegger/nvim-dap" } })
+		use("jbyuki/one-small-step-for-vimkind")
 
 		-- session
 		use({ "rmagatti/auto-session" })
