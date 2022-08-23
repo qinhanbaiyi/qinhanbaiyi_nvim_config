@@ -74,6 +74,11 @@ _G.packer_plugins = {
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/Comment.nvim",
     url = "https://github.com/numToStr/Comment.nvim"
   },
+  ["FixCursorHold.nvim"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/FixCursorHold.nvim",
+    url = "https://github.com/antoinemadec/FixCursorHold.nvim"
+  },
   LuaSnip = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/LuaSnip",
@@ -199,6 +204,11 @@ _G.packer_plugins = {
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/neogen",
     url = "https://github.com/danymat/neogen"
   },
+  neotest = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/neotest",
+    url = "https://github.com/nvim-neotest/neotest"
+  },
   ["null-ls.nvim"] = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
@@ -263,6 +273,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/packer.nvim",
     url = "https://github.com/wbthomason/packer.nvim"
+  },
+  playground = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/playground",
+    url = "https://github.com/nvim-treesitter/playground"
   },
   ["plenary.nvim"] = {
     loaded = true,
