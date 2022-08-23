@@ -24,6 +24,7 @@ return require("packer").startup({
 			"nvim-treesitter/nvim-treesitter",
 			run = ":TSInstallFromGrammar",
 		})
+		use({ "nvim-treesitter/playground" })
 		use({
 			"lewis6991/spellsitter.nvim",
 			config = function()
@@ -144,7 +145,7 @@ return require("packer").startup({
 		-- barbar plugin, which makes tags upper windows
 		use({ "romgrk/barbar.nvim" })
 
-		use({ "akinsho/toggleterm.nvim", tag = "v1.*" })
+		use({ "akinsho/toggleterm.nvim", tag = "v2.*" })
 
 		-- show the history of change
 		use({ "mbbill/undotree" })
@@ -177,6 +178,16 @@ return require("packer").startup({
 
 		-- session
 		use({ "rmagatti/auto-session" })
+
+		--test
+		use({
+			"nvim-neotest/neotest",
+			requires = {
+				"nvim-lua/plenary.nvim",
+				"nvim-treesitter/nvim-treesitter",
+				"antoinemadec/FixCursorHold.nvim",
+			},
+		})
 	end,
 	config = {
 		display = {

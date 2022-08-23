@@ -41,18 +41,47 @@ end
 
 local M = {}
 
+local text = {}
+text.in_comment = function()
+	-- local line = vim.api.
+	if line_to_cursor:match("#") then
+		return true
+	end
+	return false
+end
+
 M = {
 	s("pp", {
 		t({ "%>%", "" }),
 		t({ "" }),
 		-- isn(1, t({ "%>%", "" }), "\t"),
 	}),
+	-- s("foo", {
+	-- 	t({ "just a test", "" }),
+	-- 	t({ "" }),
+	-- 	-- isn(1, t({ "%>%", "" }), "\t"),
+	-- }),
 	s("in", {
 		t("%in% "),
 	}),
 	s("e", {
 		t("<- "),
 	}),
+	s({ trig = "param" }, {
+		t({ "@param", "" }),
+		t({ "@param", "" }),
+	}, {
+		condition = function(line)
+			if line:match("#") then
+				return true
+			end
+			return false
+		end,
+	}),
+	-- s(),
+	-- s(),
+	-- s(),
+	-- s(),
 	s(
 		"func",
 		fmt(
