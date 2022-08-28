@@ -67,7 +67,7 @@ lua = {
 			{
 				rep(1),
 				i(4, "does mysterious stuff"),
-				d(5, lua_utils:get_current_func_doc_comment_snip(), { 2 }),
+				d(5, get_doc, { 2 }),
 				i(1),
 				i(2),
 				t(indentation),
