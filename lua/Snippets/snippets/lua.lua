@@ -16,7 +16,10 @@ local fmt = require("luasnip.extras.fmt").fmt
 local m = require("luasnip.extras").m
 local lambda = require("luasnip.extras").l
 local postfix = require("luasnip.extras.postfix").postfix
-local lua_utils = require("Snippets.utils")
+local lua_utils = require("Snippets.utils.lua.utils")
+local su = require("utils.lua.string")
+local tl = su.box_trim_lines
+local indentation = su.get_space_str(vim.opt.softtabstop:get())
 
 local function get_doc(args)
 	return lua_utils:get_current_func_doc_comment_snip(args)
@@ -37,17 +40,37 @@ lua = {
 	s(
 		"func",
 		fmt(
-			[[
+			tl([[
 		{}
 		function {}({}) 
 		{}{}
 		end
-		]],
+		]]),
 			{
 				d(4, get_doc, { 2 }),
 				i(1),
 				i(2),
 				t(lua_utils:get_space_str(8)),
+				i(3),
+			}
+		)
+	),
+	s(
+		"docfunc",
+		fmt(
+			tl([[
+                    -- {} {}{}
+                    local {} = function({})
+                        {}{}
+                    end
+                ]]),
+			{
+				rep(1),
+				i(4, "does mysterious stuff"),
+				d(5, lua_utils:get_current_func_doc_comment_snip(), { 2 }),
+				i(1),
+				i(2),
+				t(indentation),
 				i(3),
 			}
 		)

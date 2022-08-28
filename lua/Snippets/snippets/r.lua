@@ -16,7 +16,7 @@ local fmt = require("luasnip.extras.fmt").fmt
 local m = require("luasnip.extras").m
 local lambda = require("luasnip.extras").l
 local postfix = require("luasnip.extras.postfix").postfix
-local lua_utils = require("Snippets.utils")
+local lua_utils = require("Snippets.utils.r.utils")
 
 local function comment(...)
 	local args = { ... }
@@ -40,15 +40,6 @@ local function get_current_func_doc_comment_snip(args)
 end
 
 local M = {}
-
-local text = {}
-text.in_comment = function()
-	-- local line = vim.api.
-	if line_to_cursor:match("#") then
-		return true
-	end
-	return false
-end
 
 M = {
 	s("pp", {
@@ -78,7 +69,25 @@ M = {
 			return false
 		end,
 	}),
-	-- s(),
+	s(
+		"justdo",
+		fmt(
+			[[
+	{}
+	{} <- function({}) {{
+	{}
+	}}
+	{}
+	]],
+			{
+				d(4),
+				i(1, name),
+				i(2),
+				i(3),
+				i(0),
+			}
+		)
+	),
 	-- s(),
 	-- s(),
 	-- s(),

@@ -16,7 +16,7 @@ local fmt = require("luasnip.extras.fmt").fmt
 local m = require("luasnip.extras").m
 local lambda = require("luasnip.extras").l
 local postfix = require("luasnip.extras.postfix").postfix
-local lua_utils = require("Snippets.utils")
+local lua_utils = require("Snippets.utils.lua.utils")
 
 local function get_current_func_doc_comment_snip(args)
 	local index = 1
