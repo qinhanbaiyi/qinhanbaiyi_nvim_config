@@ -1,43 +1,30 @@
 local ls = require("luasnip")
+require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/Snippets/snippets" })
+require("luasnip").config.setup({ store_selection_keys = "<A-p>" })
+
+vim.cmd([[command! LuaSnipEdit :lua require("luasnip.loaders.from_lua").edit_snippet_files()]])
+
 local types = require("luasnip.util.types")
-
 ls.config.set_config({
-	-- This tells LuaSnip to remember to keep around the last snippet.
-	-- You can jump back into it even if you move outside of the selection
-	history = true,
-
-	-- This one is cool cause if you have dynamic snippets, it updates as you type!
-	updateevents = "TextChanged,TextChangedI",
-
-	-- Autosnippets:
+	history = true, --keep around last snippet local to jump back
+	updateevents = "TextChanged,TextChangedI", --update changes as you type
 	enable_autosnippets = true,
-
-	-- Crazy highlights!!
-	-- #vid3
-	-- ext_opts = nil,
 	ext_opts = {
 		[types.choiceNode] = {
 			active = {
-				virt_text = { { " <- Current Choice", "NonTest" } },
+				virt_text = { { "●", "GruvboxOrange" } },
 			},
 		},
+		-- [types.insertNode] = {
+		-- 	active = {
+		-- 		virt_text = { { "●", "GruvboxBlue" } },
+		-- 	},
+		-- },
 	},
-})
+}) --}}}
 require("luasnip.loaders.from_vscode").lazy_load()
-local snippets = {}
-snippets = {
-	all = require("Snippets.snippets.all"),
-	lua = require("Snippets.snippets.lua"),
-	rust = require("Snippets.snippets.rust"),
-	markdown = require("Snippets.snippets.markdown"),
-	tex = require("Snippets.snippets.tex"),
-	r = require("Snippets.snippets.r"),
-	python = require("Snippets.snippets.python"),
-}
-ls.add_snippets("all", snippets.all, { key = "all" })
-ls.add_snippets("rust", snippets.rust, { key = "rust" })
-ls.add_snippets("lua", snippets.lua, { key = "lua" })
-ls.add_snippets("markdown", snippets.markdown, { key = "markdown" })
-ls.add_snippets("tex", snippets.latex, { key = "tex" })
-ls.add_snippets("r", snippets.r, { key = "r" })
-ls.add_snippets("python", snippets.python, { key = "python" })
+local list = { "all", "r", "lua", "tex", "python", "rust" }
+for _, lang in ipairs(list) do
+	local snippet = require("Snippets.snippets." .. lang)
+	ls.add_snippets(lang, snippet, { key = lang })
+end
