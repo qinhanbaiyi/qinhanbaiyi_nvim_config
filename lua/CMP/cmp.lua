@@ -205,7 +205,26 @@ cmp.setup({
 cmp.setup.cmdline(":", {
 	sources = {
 		{ name = "cmdline" },
+		{ name = "nvim_lsp", group_index = 1, priority = 80 },
+		{
+			name = "buffer",
+			keyword_length = 2,
+			option = {
+				get_bufnrs = function()
+					local bufs = {}
+					for _, win in ipairs(vim.api.nvim_list_wins()) do
+						bufs[vim.api.nvim_win_get_buf(win)] = true
+					end
+					return vim.tbl_keys(bufs)
+				end,
+			},
+			group_index = 1,
+		},
 		{ name = "path" },
+		{ name = "cmp_tabnine" },
+		--{name = "calc"},
+		--{name = "spell"},
+		--{name = "emoji"}
 	},
 })
 

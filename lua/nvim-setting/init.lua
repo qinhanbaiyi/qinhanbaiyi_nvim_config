@@ -2,6 +2,7 @@ local M = {
 	"nvim-setting.set",
 	"nvim-setting.keymap",
 	"nvim-setting.autocmd",
+	"nvim-setting.globals",
 }
 for _, mod in ipairs(M) do
 	local ok, err = pcall(require, mod)

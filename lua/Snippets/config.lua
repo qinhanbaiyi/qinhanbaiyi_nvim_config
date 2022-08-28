@@ -30,7 +30,7 @@ snippets = {
 	lua = require("Snippets.snippets.lua"),
 	rust = require("Snippets.snippets.rust"),
 	markdown = require("Snippets.snippets.markdown"),
-	latex = require("Snippets.snippets.latex"),
+	tex = require("Snippets.snippets.tex"),
 	r = require("Snippets.snippets.r"),
 	python = require("Snippets.snippets.python"),
 }

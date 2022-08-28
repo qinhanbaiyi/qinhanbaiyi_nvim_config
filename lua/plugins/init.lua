@@ -179,7 +179,7 @@ return require("packer").startup({
 		-- session
 		use({ "rmagatti/auto-session" })
 
-		--test
+		-- test
 		use({
 			"nvim-neotest/neotest",
 			requires = {
@@ -188,6 +188,9 @@ return require("packer").startup({
 				"antoinemadec/FixCursorHold.nvim",
 			},
 		})
+
+		-- develop
+		use("folke/lua-dev.nvim")
 	end,
 	config = {
 		display = {

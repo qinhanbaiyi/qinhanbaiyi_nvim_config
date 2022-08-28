@@ -26,47 +26,60 @@ lsp_installer.on_server_ready(function(server)
 			autocmd = false,
 		}, opts)
 		server:setup(opts)
+		-- elseif server.name == "sumneko_lua" then
+		-- 	--lua
+		-- 	local runtime_path = vim.split(package.path, ";")
+		-- 	table.insert(runtime_path, "lua/?.lua")
+		-- 	table.insert(runtime_path, "lua/?/init.lua")
+		--
+		-- 	opts = vim.tbl_deep_extend("force", {
+		-- 		-- cmd = { "/home/baiyi/.local/bin/lua-language-server/bin/lua-language-server" },
+		-- 		settings = {
+		-- 			Lua = {
+		-- 				runtime = {
+		-- 					-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+		-- 					version = "LuaJIT",
+		-- 					-- Setup your lua path
+		-- 					path = runtime_path,
+		-- 				},
+		--
+		-- 				diagnostics = {
+		-- 					-- Get the language server to recognize the `vim` global
+		-- 					globals = { "vim" },
+		-- 				},
+		-- 				workspace = {
+		-- 					-- Make the server aware of Neovim runtime files
+		-- 					library = {
+		-- 						[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+		-- 						[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+		-- 					},
+		-- 					-- Make the server aware of Neovim runtime files
+		-- 					-- library = vim.api.nvim_get_runtime_file("", true),
+		-- 					preloadFileSize = 10000,
+		-- 					maxPreload = 10000,
+		-- 					checkThirdParty = false,
+		-- 				},
+		-- 				-- Do not send telemetry data containing a randomized but unique identifier
+		-- 				telemetry = {
+		-- 					enable = false,
+		-- 				},
+		-- 			},
+		-- 		},
+		-- 	}, opts)
+		-- 	server:setup(opts)
 	elseif server.name == "sumneko_lua" then
-		--lua
-		local runtime_path = vim.split(package.path, ";")
-		table.insert(runtime_path, "lua/?.lua")
-		table.insert(runtime_path, "lua/?/init.lua")
-
-		opts = vim.tbl_deep_extend("force", {
-			-- cmd = { "/home/baiyi/.local/bin/lua-language-server/bin/lua-language-server" },
-			settings = {
-				Lua = {
-					runtime = {
-						-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-						version = "LuaJIT",
-						-- Setup your lua path
-						path = runtime_path,
-					},
-
-					diagnostics = {
-						-- Get the language server to recognize the `vim` global
-						globals = { "vim" },
-					},
-					workspace = {
-						-- Make the server aware of Neovim runtime files
-						library = {
-							[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-							[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-						},
-						-- Make the server aware of Neovim runtime files
-						-- library = vim.api.nvim_get_runtime_file("", true),
-						preloadFileSize = 10000,
-						maxPreload = 10000,
-						checkThirdParty = false,
-					},
-					-- Do not send telemetry data containing a randomized but unique identifier
-					telemetry = {
-						enable = false,
-					},
+		local luadev = require("lua-dev").setup({
+			lspconfig = vim.tbl_deep_extend("force", server:get_default_options(), opts),
+			library = {
+				plugins = {
+					"nvim-treesitter",
+					"plenary.nvim",
+					"telescope.nvim",
 				},
 			},
-		}, opts)
-		server:setup(opts)
+		})
+
+		server:setup(luadev)
 	elseif server.name == "rust_analyzer" then
 		require("rust-tools").setup({
 			-- The "server" property provided in rust-tools setup function are the
@@ -90,7 +103,6 @@ lsp_installer.on_server_ready(function(server)
 		server:setup(opts)
 	end
 end)
-
 -- Latex Preview
 -- require("lspconfig").texlab.setup({})
 
@@ -135,4 +147,4 @@ vim.cmd([[ autocmd BufRead,BufNewFile *.org set filetype=org ]])
 --lua
 --require("lspconf.lua")
 --普通的语言支持
---require("lspconf.common")
+--require("lspconf.common"

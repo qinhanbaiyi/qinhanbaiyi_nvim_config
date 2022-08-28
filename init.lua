@@ -13,6 +13,7 @@ local M = {
 	"Dap",
 	"ftplugin.init",
 	"Git",
+	"Dev",
 }
 
 for _, mod in ipairs(M) do

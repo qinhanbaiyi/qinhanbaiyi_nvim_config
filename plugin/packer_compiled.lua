@@ -194,6 +194,11 @@ _G.packer_plugins = {
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lspsaga.nvim",
     url = "https://github.com/tami5/lspsaga.nvim"
   },
+  ["lua-dev.nvim"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lua-dev.nvim",
+    url = "https://github.com/folke/lua-dev.nvim"
+  },
   ["lualine.nvim"] = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lualine.nvim",
