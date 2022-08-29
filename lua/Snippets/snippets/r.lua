@@ -16,7 +16,10 @@ local fmt = require("luasnip.extras.fmt").fmt
 local m = require("luasnip.extras").m
 local lambda = require("luasnip.extras").l
 local postfix = require("luasnip.extras.postfix").postfix
-local lua_utils = require("Snippets.utils.r.utils")
+local r_utils = require("Snippets.utils.r.utils")
+local su = require("utils.lua.string")
+local tl = su.box_trim_lines
+local indentation = su.get_space_str(8)
 
 local function comment(...)
 	local args = { ... }
@@ -47,11 +50,28 @@ M = {
 		t({ "" }),
 		-- isn(1, t({ "%>%", "" }), "\t"),
 	}),
-	-- s("foo", {
-	-- 	t({ "just a test", "" }),
-	-- 	t({ "" }),
-	-- 	-- isn(1, t({ "%>%", "" }), "\t"),
-	-- }),
+	s(
+		"func",
+		fmt(
+			tl([[
+			{}{}{}
+			{} <- function({}) {{
+			{}{}
+			}}
+			]]),
+			{
+				f(function(args)
+					return "#' @description " .. args[1][1]
+				end, { 1 }),
+				d(3, r_utils.get_current_func_doc_comment_snip, { 2 }),
+				d(5, r_utils.get_current_func_return_snip, { 4 }),
+				i(1),
+				i(2),
+				t(indentation),
+				i(4),
+			}
+		)
+	),
 	s("in", {
 		t("%in% "),
 	}),
@@ -69,92 +89,55 @@ M = {
 			return false
 		end,
 	}),
-	s(
-		"justdo",
-		fmt(
-			[[
-	{}
-	{} <- function({}) {{
-	{}
-	}}
-	{}
-	]],
-			{
-				d(4),
-				i(1, name),
-				i(2),
-				i(3),
-				i(0),
-			}
-		)
-	),
 	-- s(),
 	-- s(),
 	-- s(),
-	s(
-		"func",
-		fmt(
-			[[
-		{}
-		{} <- function({}) {{
-		{}{}
-		}}
-		]],
-			{
-				d(4, get_current_func_doc_comment_snip, { 2 }),
-				i(1, "func"),
-				i(2),
-				t(lua_utils:get_space_str(8)),
-				i(3),
-			}
-		)
-	),
-	s("func", {
-		c(1, {
-			sn(nil, {
-				t("func <- function("),
-				i(1),
-				t({ ") {", "" }),
-				t(lua_utils:get_space_str(8)),
-				i(2),
-				t({ "", "}" }),
-			}),
-			sn(nil, {
-				t("func <- function("),
-				i(1),
-				t({ ") {", "\t" }),
-				f(function(args)
-					local tags = {}
-					table.insert(tags, "# Args: " .. args[1][1] .. "")
-					table.insert(tags, "\t# Return: " .. "")
-					return tags
-				end, { 1 }, {}),
-				t({ "", "\t" }),
-				i(2),
-				t({ "", "}" }),
-			}),
-			-- sn(nil, {
-			fmt(
-				[[
-		# '@Desc: {}
-		# '@Params: {}
-		# '@Return: {}
-		func <- function({}) {{
-		{}{}
-		}}
-		]],
-				{
-					i(3),
-					rep(1),
-					i(4),
-					i(1),
-					t(lua_utils:get_space_str(8)),
-					i(2),
-				}
-			),
-			-- }),
-		}),
-	}),
+	-- s("func", {
+	-- 	c(1, {
+	-- 		sn(nil, {
+	-- 			t("func <- function("),
+	-- 			i(1),
+	-- 			t({ ") {", "" }),
+	-- 			t(r_utils:get_space_str(8)),
+	-- 			i(2),
+	-- 			t({ "", "}" }),
+	-- 		}),
+	-- 		sn(nil, {
+	-- 			t("func <- function("),
+	-- 			i(1),
+	-- 			t({ ") {", "\t" }),
+	-- 			f(function(args)
+	-- 				local tags = {}
+	-- 				table.insert(tags, "# Args: " .. args[1][1] .. "")
+	-- 				table.insert(tags, "\t# Return: " .. "")
+	-- 				return tags
+	-- 			end, { 1 }, {}),
+	-- 			t({ "", "\t" }),
+	-- 			i(2),
+	-- 			t({ "", "}" }),
+	-- 		}),
+	-- 		-- sn(nil, {
+	-- 		fmt(
+	-- 			[[
+	-- 	# '@Desc: {}
+	-- 	# '@Params: {}
+	-- 	# '@Return: {}
+	-- 	func <- function({}) {{
+	-- 	{}{}
+	-- 	}}
+	-- 	]],
+	-- 			{
+	-- 				i(3),
+	-- 				rep(1),
+	-- 				i(4),
+	-- 				i(1),
+	-- 				t(r_utils:get_space_str(8)),
+	-- 				i(2),
+	-- 			}
+	-- 		),
+	-- 		-- }),
+	-- 	}),
+	-- }),
 }
 
 return M

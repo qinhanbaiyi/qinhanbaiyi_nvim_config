@@ -21,7 +21,7 @@ local ts_query = vim.treesitter.query
 local M = {}
 
 -- parse_syntax_tree parse the syntax for the current changes
-function string.split(input, delimiter)
+function M.split(input, delimiter)
 	input = tostring(input)
 	delimiter = tostring(delimiter)
 	if delimiter == "" then
@@ -30,13 +30,13 @@ function string.split(input, delimiter)
 	local pos, arr = 0, {}
 	for st, sp in
 		function()
-			return string.find(input, delimiter, pos, true)
+			return M.find(input, delimiter, pos, true)
 		end
 	do
-		table.insert(arr, string.sub(input, pos, st - 1))
+		table.insert(arr, M.sub(input, pos, st - 1))
 		pos = sp + 1
 	end
-	table.insert(arr, string.sub(input, pos))
+	table.insert(arr, M.sub(input, pos))
 	return arr
 end
 
@@ -176,30 +176,13 @@ function M:get_current_func_doc_comment_snip()
 	local comment_lines = { "\n" }
 	local snip_nodes = {}
 	local index = 1
-	-- for _, nodes, _ in query:iter_matches(function_node, 0) do
-	-- 	for _, param_node in ipairs(nodes) do
-	-- 		table.insert(
-	-- 			comment_lines,
-	-- 			string.format("-- @param {{ {} }} %s {}", ts_query.get_node_text(param_node, 0))
-	-- 		)
-	--
-	-- 		table.insert(snip_nodes, i(index, "any"))
-	-- 		table.insert(snip_nodes, i(index + 1, "is a mysterious parameter"))
-	--
-	-- 		index = index + 2
-	-- 	end
-	-- end
 	for _, matches, _ in query:iter_matches(function_node, 0) do
 		local param_node = matches[1]
-		table.insert(comment_lines, string.format("-- @param {{ {} }} %s {}", ts_query.get_node_text(param_node, 0)))
-
+		table.insert(comment_lines, M.format("-- @param {{ {} }} %s {}", ts_query.get_node_text(param_node, 0)))
 		table.insert(snip_nodes, i(index, "any"))
-		table.insert(snip_nodes, i(index + 1, "is a mysterious parameter"))
+		table.insert(snip_nodes, i(index + 1))
 
 		index = index + 2
-		-- table.insert(param_info, {
-		-- 	param = vim.treesitter.query.get_node_text(param_node, 0),
-		-- })
 	end
 	-- if there are no param in the function, return nothing if #snip_nodes < 1 then
 	if #snip_nodes < 1 then
