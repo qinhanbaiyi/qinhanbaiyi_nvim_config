@@ -21,10 +21,6 @@ local su = require("utils.lua.string")
 local tl = su.box_trim_lines
 local indentation = su.get_space_str(vim.opt.softtabstop:get())
 
-local function get_doc(args)
-	return lua_utils:get_current_func_doc_comment_snip(args)
-end
-
 local lua = {}
 lua = {
 	s("req", {
@@ -41,13 +37,16 @@ lua = {
 		"func",
 		fmt(
 			tl([[
-		{}
+		{}{}
 		function {}({}) 
 		{}{}
 		end
 		]]),
 			{
-				d(4, get_doc, { 2 }),
+				f(function(args)
+					return "-- " .. args[1][1] .. " "
+				end, { 1 }),
+				d(4, lua_utils.get_current_func_doc_comment_snip, { 2 }),
 				i(1),
 				i(2),
 				t(lua_utils:get_space_str(8)),
@@ -56,7 +55,7 @@ lua = {
 		)
 	),
 	s(
-		"docfunc",
+		"localfunc",
 		fmt(
 			tl([[
                     -- {} {}{}
@@ -66,8 +65,8 @@ lua = {
                 ]]),
 			{
 				rep(1),
-				i(4, "does mysterious stuff"),
-				d(5, get_doc, { 2 }),
+				i(4),
+				d(5, lua_utils.get_current_func_doc_comment_snip, { 2 }),
 				i(1),
 				i(2),
 				t(indentation),

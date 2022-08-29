@@ -23,7 +23,7 @@ ls.config.set_config({
 	},
 }) --}}}
 require("luasnip.loaders.from_vscode").lazy_load()
-local list = { "all", "r", "lua", "tex", "python", "rust" }
+local list = { "all", "r", "lua", "tex", "python", "rust", "markdown" }
 for _, lang in ipairs(list) do
 	local snippet = require("Snippets.snippets." .. lang)
 	ls.add_snippets(lang, snippet, { key = lang })
