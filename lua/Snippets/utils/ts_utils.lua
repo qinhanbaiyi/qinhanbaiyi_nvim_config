@@ -4,8 +4,8 @@ local ts_locals = require("nvim-treesitter.locals")
 local Utils = {}
 
 -- parse_syntax_tree parse the syntax for the current changes
-function Utils.refresh_syntax_tree()
-	local language_tree = vim.treesitter.get_parser(0, "lua")
+function Utils.refresh_syntax_tree(lang)
+	local language_tree = vim.treesitter.get_parser(0, lang)
 	language_tree:parse()
 end
 
@@ -26,4 +26,9 @@ function Utils.get_current_func_node()
 	return function_node
 end
 
+function demo(a, b, c)
+	--
+end
+
+local demo = function(w, a) end
 return Utils
