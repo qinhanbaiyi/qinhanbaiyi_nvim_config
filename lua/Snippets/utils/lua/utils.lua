@@ -17,6 +17,8 @@ local postfix = require("luasnip.extras.postfix").postfix
 
 local lua_ts_utils = require("Snippets.utils.ts_utils")
 local ts_query = vim.treesitter.query
+local ts_utils = require("nvim-treesitter.ts_utils")
+local ts_locals = require("nvim-treesitter.locals")
 
 local M = {}
 
@@ -39,27 +41,6 @@ function M.split(input, delimiter)
 	table.insert(arr, M.sub(input, pos))
 	return arr
 end
-
--- local function comment(...)
--- 	local args = { ... }
--- 	local result = ""
--- 	for _, arg in ipairs(args) do
--- 		result = result .. arg
--- 	end
--- 	return string.gsub(vim.bo.commentstring, "%%s", "") .. result
--- end
---
--- function M:get_current_func_doc_comment_snip(args)
--- 	local index = 1
--- 	local tab = {}
--- 	for _, arg in ipairs(string.split(args[1][1], ",")) do
--- 		table.insert(tab, t({ comment(" @Param: ", arg), "" }))
--- 		table.insert(tab, t({ "" }))
--- 	end
--- 	table.insert(tab, t(comment(" @Return: ")))
--- 	table.insert(tab, i(index))
--- 	return sn(nil, tab)
--- end
 
 -- the usage of dynamic node
 function M:lines(args, parent, old_state, initial_text)
@@ -103,59 +84,9 @@ function M:get_space_str(number_of_spaces)
 	return string.format("%%-%ds", number_of_spaces):format("")
 end
 
--- function M.get_current_func_doc_comment_snip()
--- 	lua_ts_utils.refresh_syntax_tree()
--- 	local function_node = lua_ts_utils.get_current_func_node()
---
--- 	if not function_node then
--- 		return sn(nil, t(""))
--- 	end
--- 	-- 	local param_name_query = vim.treesitter.get_query(
--- 	-- 		"lua",
--- 	-- 		[[
--- 	-- (function_declaration
--- 	-- (parameters) @params)
--- 	-- ]]
--- 	-- 	)
--- 	local param_name_query = vim.treesitter.query.parse_query(
--- 		"lua",
--- 		[[
--- (function_declaration
--- (parameters
--- (identifier) @params
--- ))
--- 	]]
--- 	)
--- 	-- if param_name_query ~= nil then
--- 	local comment_lines = { "\n" }
--- 	local snip_nodes = {}
--- 	local index = 1
---
--- 	for _, nodes, _ in param_name_query:iter_matches(function_node, 0) do
--- 		for _, param_node in ipairs(nodes) do
--- 			table.insert(
--- 				comment_lines,
--- 				string.format("-- @param {{ {} }} %s {}", ts_query.get_node_text(param_node, 0))
--- 			)
---
--- 			table.insert(snip_nodes, i(index, "any"))
--- 			table.insert(snip_nodes, i(index + 1, "is a mysterious parameter"))
---
--- 			index = index + 2
--- 		end
--- 	end
--- 	-- if there are no param in the function, return nothing
--- 	if #snip_nodes < 1 then
--- 		return sn(nil, t(""))
--- 	end
---
--- 	local comment_str = table.concat(comment_lines, "\n")
---
--- 	return sn(nil, fmt(comment_str, snip_nodes))
--- end
-
 function M:get_current_func_doc_comment_snip()
-	lua_ts_utils.refresh_syntax_tree()
+	local lang = "lua"
+	lua_ts_utils.refresh_syntax_tree(lang)
 	local function_node = lua_ts_utils.get_current_func_node()
 	if not function_node then
 		return sn(nil, t(""))
@@ -178,7 +109,7 @@ function M:get_current_func_doc_comment_snip()
 	local index = 1
 	for _, matches, _ in query:iter_matches(function_node, 0) do
 		local param_node = matches[1]
-		table.insert(comment_lines, M.format("-- @param {{ {} }} %s {}", ts_query.get_node_text(param_node, 0)))
+		table.insert(comment_lines, string.format("-- @param {{ {} }} %s {}", ts_query.get_node_text(param_node, 0)))
 		table.insert(snip_nodes, i(index, "any"))
 		table.insert(snip_nodes, i(index + 1))
 

@@ -34,6 +34,19 @@ lua = {
 		t("')"),
 	}),
 	s(
+		"M",
+		fmt(
+			tl([[
+		local M = {{}}
+		{}
+		return M
+		]]),
+			{
+				i(1),
+			}
+		)
+	),
+	s(
 		"func",
 		fmt(
 			tl([[
