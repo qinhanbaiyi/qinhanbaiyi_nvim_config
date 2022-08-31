@@ -10,6 +10,7 @@ local M = {
 	"Which-key-config",
 	"Theme",
 	"LSP",
+	"Mason",
 	"Dap",
 	"ftplugin.init",
 	"Git",
