@@ -48,23 +48,40 @@ require("lspconfig").sumneko_lua.setup({
 			},
 		},
 	},
-	-- 	opts = vim.tbl_deep_extend("force", {
-	-- 		-- cmd = { "/home/baiyi/.local/bin/lua-language-server/bin/lua-language-server" },
-	-- 	}, opts)
-	-- opts = {
-	-- require("lua-dev").setup({
-	-- 	lspconfig = vim.tbl_deep_extend("force", server:get_default_options(), opts),
-	-- 	library = {
-	-- 		plugins = {
-	-- 			"nvim-treesitter",
-	-- 			"plenary.nvim",
-	-- 			"telescope.nvim",
-	-- 		},
-	-- 	},
-	-- }),
-	-- },
 })
 require("lspconfig").gopls.setup({})
+require("lspconfig").rust_analyzer.setup({
+	settings = {
+		["rust_analyzer"] = {},
+	},
+})
+require("rust-tools").setup({
+	-- The "server" property provided in rust-tools setup function are the
+	-- settings rust-tools will provide to lspconfig during init.            --
+	-- We merge the necessary settings from nvim-lsp-installer (server:get_default_options())
+	-- with the user's own settings (opts).
+	server = {
+		-- standalone file support
+		-- setting it to false may improve startup time
+		standalone = true,
+	}, -- rust-analyer options
+	tools = {
+		autoSetHints = true,
+		inlay_hints = {
+			show_parameter_hints = true,
+			show_variable_name = false,
+			highlight = "Comment",
+		},
+	},
+	-- debugging stuff
+	dap = {
+		adapter = {
+			type = "executable",
+			command = "lldb-vscode",
+			name = "rt_lldb",
+		},
+	},
+})
 -- lua
 
 -- mason_lsp.on_server_ready(function(server)

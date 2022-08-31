@@ -70,4 +70,4 @@ lsp_installer.on_server_ready(function(server)
 end)
 
 -- Latex and Markdown LSP
-vim.cmd([[ autocmd BufRead,BufNewFile *.org set filetype=org ]])
+vim.cmd({ [[ autocmd BufRead,BufNewFile *.org set filetype=org ]] })
