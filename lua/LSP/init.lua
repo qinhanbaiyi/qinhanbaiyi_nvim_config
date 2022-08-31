@@ -2,7 +2,6 @@
 ------------------------- LSP REQUIRE --------------------------------
 ----------------------------------------------------------------------
 local lsp_modules = {
-	"LSP.lsp-installer",
 	"LSP.lspsaga",
 	"LSP.lsp-color",
 	"LSP.null-ls",

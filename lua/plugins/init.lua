@@ -16,6 +16,7 @@ end
 
 return require("packer").startup({
 	function()
+		local use = use
 		-- Packer can manage itself
 		use("wbthomason/packer.nvim")
 
@@ -55,7 +56,11 @@ return require("packer").startup({
 		-- LSP
 		use({ "neovim/nvim-lspconfig" })
 		use({ "tami5/lspsaga.nvim" })
-		use({ "williamboman/nvim-lsp-installer" })
+		use({
+			"williamboman/mason.nvim",
+			"williamboman/mason-lspconfig.nvim",
+			"neovim/nvim-lspconfig",
+		})
 		use({ "folke/lsp-colors.nvim" })
 		use({ "ray-x/lsp_signature.nvim" })
 		use({ "RRethy/vim-illuminate" }) -- highlight the word under the cursor
