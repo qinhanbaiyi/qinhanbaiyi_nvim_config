@@ -1,4 +1,5 @@
 local mason_lsp = require("mason-lspconfig")
+local lspconfig = require("lspconfig")
 mason_lsp.setup({
 	ensure_installed = {
 		"sumneko_lua",
@@ -82,6 +83,11 @@ require("rust-tools").setup({
 		},
 	},
 })
+
+require("go").setup()
+require("lspconfig").texlab.setup({})
+
+require("lspconfig").gopls.setup({})
 -- Latex and Markdown LSP
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = { "*.org" },

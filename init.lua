@@ -1,6 +1,6 @@
 local M = {
 	"plugins",
-	"Telescope-config",
+	"Telescope-config.init",
 	"Treesitter",
 	"nvim-setting",
 	"Annotation",
