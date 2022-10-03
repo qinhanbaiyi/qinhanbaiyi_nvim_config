@@ -129,7 +129,7 @@ wk.register({
 			e = { "<cmd>Lspsaga show_line_diagnostics<cr>", "Show Line Diagnostics" },
 			n = { "<cmd>Lspsaga diagnostic_jump_next<cr>", "Go To Next Diagnostic" },
 			N = { "<cmd>Lspsaga diagnostic_jump_prev<cr>", "Go To Previous Diagnostic" },
-			f = { "<cmd>lua vim.lsp.buf.format { async = true }<CR>", "LSP Format" },
+			f = { "<cmd>lua vim.lsp.buf.format {async = true}<CR>", "LSP Format" },
 		},
 		ga = { "<cmd>Lspsaga lsp_finder<CR>", "Async Lsp Finder" },
 		ca = { "<cmd>Lspsaga code_action<CR>", "Code Action" },

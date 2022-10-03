@@ -4,6 +4,7 @@ M = {
 	"Dap.lang.python",
 	"Dap.lang.cpp",
 	"Dap.lang.r",
+	"Dap.lang.go",
 	"Dap.lang.lua",
 	"Dap.lang.ui",
 	"Dap.lang.config",

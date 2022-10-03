@@ -1,4 +1,3 @@
-local execute = vim.api.nvim_command
 local fn = vim.fn
 
 local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
@@ -55,11 +54,20 @@ return require("packer").startup({
 
 		-- LSP
 		use({ "neovim/nvim-lspconfig" })
-		use({ "tami5/lspsaga.nvim" })
+		use({
+			"glepnir/lspsaga.nvim",
+			branch = "main",
+			config = function()
+				local saga = require("lspsaga")
+
+				saga.init_lsp_saga({
+					-- your configuration
+				})
+			end,
+		})
 		use({
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
-			"neovim/nvim-lspconfig",
 		})
 		use({ "folke/lsp-colors.nvim" })
 		use({ "ray-x/lsp_signature.nvim" })
@@ -196,6 +204,10 @@ return require("packer").startup({
 
 		-- develop
 		use("folke/lua-dev.nvim")
+
+		-- go plugin
+		use("ray-x/go.nvim")
+		use("ray-x/guihua.lua")
 	end,
 	config = {
 		display = {
