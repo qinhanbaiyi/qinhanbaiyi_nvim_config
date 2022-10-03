@@ -51,5 +51,6 @@ keymap("i", "<C-k>", "<Up>", opts)
 keymap("v", "R", ":SnipRun<CR>", opts)
 -- Move selected line / block of text in visual mode
 
+-- keymap("n", "<leader>fl", ":lua require'telescope.builtin'.diagnostics <cr>", { noremap = true, silent = true })
 --
 --
