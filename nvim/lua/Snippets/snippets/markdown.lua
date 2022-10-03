@@ -161,5 +161,51 @@ markdown = {
 			return snip
 		end, {}, "   "),
 	}),
+	s(
+		"dailyWorkReport",
+		fmt(
+			[[
+# {}
+
+## Today's plan
+
+> Describe today's work
+
+- 政治
+ - {} 肖秀荣1000
+ - {} Anki
+- 英语
+ - {} 英语精练2 份
+ - 单词
+   - 新词+复习
+   - 复习
+
+## Summary for today
+
+| **Completed** | **To be improved** |
+|:-:|:-:|
+|{}|{}|
+| **Reflection** | **Others** |
+|{}|{}|
+
+## Tomorrow's plan
+
+> Describe the work plan for tomorrow
+
+- {}
+		]],
+			{
+				i(1, "data"),
+				i(2, "哪部分"),
+				i(3, "哪部分"),
+				i(4, "哪年的"),
+				i(5),
+				i(6),
+				i(7),
+				i(8),
+				i(9, "tomorrow's plan"),
+			}
+		)
+	),
 }
 return markdown

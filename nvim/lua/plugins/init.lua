@@ -16,6 +16,7 @@ end
 
 return require("packer").startup({
 	function()
+		local use = use
 		-- Packer can manage itself
 		use("wbthomason/packer.nvim")
 
@@ -24,6 +25,7 @@ return require("packer").startup({
 			"nvim-treesitter/nvim-treesitter",
 			run = ":TSInstallFromGrammar",
 		})
+		use({ "nvim-treesitter/playground" })
 		use({
 			"lewis6991/spellsitter.nvim",
 			config = function()
@@ -54,7 +56,11 @@ return require("packer").startup({
 		-- LSP
 		use({ "neovim/nvim-lspconfig" })
 		use({ "tami5/lspsaga.nvim" })
-		use({ "williamboman/nvim-lsp-installer" })
+		use({
+			"williamboman/mason.nvim",
+			"williamboman/mason-lspconfig.nvim",
+			"neovim/nvim-lspconfig",
+		})
 		use({ "folke/lsp-colors.nvim" })
 		use({ "ray-x/lsp_signature.nvim" })
 		use({ "RRethy/vim-illuminate" }) -- highlight the word under the cursor
@@ -144,7 +150,7 @@ return require("packer").startup({
 		-- barbar plugin, which makes tags upper windows
 		use({ "romgrk/barbar.nvim" })
 
-		use({ "akinsho/toggleterm.nvim", tag = "v1.*" })
+		use({ "akinsho/toggleterm.nvim", tag = "v2.*" })
 
 		-- show the history of change
 		use({ "mbbill/undotree" })
@@ -177,6 +183,19 @@ return require("packer").startup({
 
 		-- session
 		use({ "rmagatti/auto-session" })
+
+		-- test
+		use({
+			"nvim-neotest/neotest",
+			requires = {
+				"nvim-lua/plenary.nvim",
+				"nvim-treesitter/nvim-treesitter",
+				"antoinemadec/FixCursorHold.nvim",
+			},
+		})
+
+		-- develop
+		use("folke/lua-dev.nvim")
 	end,
 	config = {
 		display = {

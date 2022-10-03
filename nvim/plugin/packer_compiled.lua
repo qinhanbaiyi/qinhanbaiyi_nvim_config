@@ -74,6 +74,11 @@ _G.packer_plugins = {
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/Comment.nvim",
     url = "https://github.com/numToStr/Comment.nvim"
   },
+  ["FixCursorHold.nvim"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/FixCursorHold.nvim",
+    url = "https://github.com/antoinemadec/FixCursorHold.nvim"
+  },
   LuaSnip = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/LuaSnip",
@@ -189,15 +194,35 @@ _G.packer_plugins = {
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lspsaga.nvim",
     url = "https://github.com/tami5/lspsaga.nvim"
   },
+  ["lua-dev.nvim"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lua-dev.nvim",
+    url = "https://github.com/folke/lua-dev.nvim"
+  },
   ["lualine.nvim"] = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
   },
+  ["mason-lspconfig.nvim"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/mason-lspconfig.nvim",
+    url = "https://github.com/williamboman/mason-lspconfig.nvim"
+  },
+  ["mason.nvim"] = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/mason.nvim",
+    url = "https://github.com/williamboman/mason.nvim"
+  },
   neogen = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/neogen",
     url = "https://github.com/danymat/neogen"
+  },
+  neotest = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/neotest",
+    url = "https://github.com/nvim-neotest/neotest"
   },
   ["null-ls.nvim"] = {
     loaded = true,
@@ -223,11 +248,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/nvim-dap-ui",
     url = "https://github.com/rcarriga/nvim-dap-ui"
-  },
-  ["nvim-lsp-installer"] = {
-    loaded = true,
-    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/nvim-lsp-installer",
-    url = "https://github.com/williamboman/nvim-lsp-installer"
   },
   ["nvim-lspconfig"] = {
     loaded = true,
@@ -263,6 +283,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/packer.nvim",
     url = "https://github.com/wbthomason/packer.nvim"
+  },
+  playground = {
+    loaded = true,
+    path = "/home/baiyi/.local/share/nvim/site/pack/packer/start/playground",
+    url = "https://github.com/nvim-treesitter/playground"
   },
   ["plenary.nvim"] = {
     loaded = true,
