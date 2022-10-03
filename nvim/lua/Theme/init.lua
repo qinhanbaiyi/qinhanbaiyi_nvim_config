@@ -16,4 +16,4 @@ for _, mod in ipairs(M) do
 		print("Err in calling theme: ", err)
 	end
 end
--- vim.cmd([[colorscheme onedark]])
+vim.cmd([[colorscheme onedark]])

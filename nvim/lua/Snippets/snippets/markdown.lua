@@ -161,5 +161,51 @@ markdown = {
 			return snip
 		end, {}, "   "),
 	}),
+	s(
+		"dailyWorkReport",
+		fmt(
+			[[
+# {}
+
+## Today's plan
+
+> Describe today's work
+
+- 学习
+ - {} 练习材料
+ - {} 复习工具
+- 工作
+ - {} 专项练习
+ - 任务
+   - 新任务+复盘
+   - 复习
+
+## Summary for today
+
+| **Completed** | **To be improved** |
+|:-:|:-:|
+|{}|{}|
+| **Reflection** | **Others** |
+|{}|{}|
+
+## Tomorrow's plan
+
+> Describe the work plan for tomorrow
+
+- {}
+		]],
+			{
+				i(1, "data"),
+				i(2, "内容"),
+				i(3, "内容"),
+				i(4, "范围"),
+				i(5),
+				i(6),
+				i(7),
+				i(8),
+				i(9, "tomorrow's plan"),
+			}
+		)
+	),
 }
 return markdown

@@ -1,53 +1,56 @@
 local keymap = vim.keymap.set
 vim.g.mapleader = " "
 
-keymap("n", "<Space>", "<NOP>", { noremap = true, silent = true })
-keymap("s", "<c-u>", "<NOP>", { noremap = true, silent = true })
-keymap("s", "<c-i>", "<NOP>", { noremap = true, silent = true })
+local opts = { noremap = true, silent = true }
+
+keymap("n", "<Space>", "<NOP>", opts)
+keymap("s", "<c-u>", "<NOP>", opts)
+keymap("s", "<c-i>", "<NOP>", opts)
 
 -- W -> :w
-keymap("n", "W", ":w<CR>", { noremap = true, silent = true })
+keymap("n", "W", ":w<CR>", opts)
 
 -- no highlight
-keymap("n", "<Leader>h", ":set hlsearch<CR>", { noremap = true, silent = true })
-keymap("n", "<Leader>nh", ":set nohlsearch<CR>", { noremap = true, silent = true })
+keymap("n", "<Leader>h", ":set hlsearch<CR>", opts)
+keymap("n", "<Leader>nh", ":set nohlsearch<CR>", opts)
 
 -- explorer
---vim.api.nvim_set_keymap('n', '<Leader>e', ':Lexplore<CR>', { noremap = true, silent = true})
+--vim.api.nvim_set_keymap('n', '<Leader>e', ':Lexplore<CR>', opts)
 
 -- find keys
-keymap("n", "/", ":/", { noremap = true, silent = true })
+keymap("n", "/", ":/", opts)
 
 -- Formatter
-keymap("n", "<leader>f", ":Format<cr>", { noremap = true, silent = true })
+keymap("n", "<leader>f", ":Format<cr>", opts)
 
 -- use <CR> to creat a new line behind of it.
-keymap("n", "<CR>", "o<Esc>", { noremap = true, silent = true })
+keymap("n", "<CR>", "o<Esc>", opts)
 
 -- better indenting
-keymap("v", "<", "<gv", { noremap = true, silent = true })
-keymap("v", ">", ">gv", { noremap = true, silent = true })
+keymap("v", "<", "<gv", opts)
+keymap("v", ">", ">gv", opts)
 
 --make Y to copy till the end of the line
-keymap("n", "Y", "y$", { noremap = true })
+keymap("n", "Y", "y$", opts)
 
 --Copy to system clipboarde
--- vim.api.nvim_set_keymap('v', 'Y', '"+y', { noremap = true, })
+-- vim.api.nvim_set_keymap('v', 'Y', '"+y', opts)
 
 --Folding
--- vim.api.nvim_set_keymap('n', '<leader>f', 'za', { noremap = true, silent = true})
+-- vim.api.nvim_set_keymap('n', '<leader>f', 'za', opts)
 
 --Movement
-keymap("n", "H", "^", { noremap = true })
-keymap("n", "J", "5j", { noremap = true })
-keymap("n", "K", "5k", { noremap = true })
-keymap("n", "L", "$", { noremap = true })
-keymap("i", "<C-l>", "<Right>", { noremap = true, silent = true })
-keymap("i", "<C-h>", "<Left>", { noremap = true, silent = true })
-keymap("i", "<C-j>", "<Down>", { noremap = true, silent = true })
-keymap("i", "<C-k>", "<Up>", { noremap = true, silent = true })
-keymap("v", "R", ":SnipRun<CR>", { noremap = true, silent = true })
+keymap("n", "H", "^", opts)
+keymap("n", "J", "5j", opts)
+keymap("n", "K", "5k", opts)
+keymap("n", "L", "$", opts)
+keymap("i", "<C-l>", "<Right>", opts)
+keymap("i", "<C-h>", "<Left>", opts)
+keymap("i", "<C-j>", "<Down>", opts)
+keymap("i", "<C-k>", "<Up>", opts)
+keymap("v", "R", ":SnipRun<CR>", opts)
 -- Move selected line / block of text in visual mode
 
+-- keymap("n", "<leader>fl", ":lua require'telescope.builtin'.diagnostics <cr>", { noremap = true, silent = true })
 --
 --
