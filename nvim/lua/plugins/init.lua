@@ -55,7 +55,17 @@ return require("packer").startup({
 
 		-- LSP
 		use({ "neovim/nvim-lspconfig" })
-		use({ "tami5/lspsaga.nvim" })
+		use({
+			"glepnir/lspsaga.nvim",
+			branch = "main",
+			config = function()
+				local saga = require("lspsaga")
+
+				saga.init_lsp_saga({
+					-- your configuration
+				})
+			end,
+		})
 		use({
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
@@ -196,6 +206,9 @@ return require("packer").startup({
 
 		-- develop
 		use("folke/lua-dev.nvim")
+
+		-- go plugin
+		use("ray-x/go.nvim")
 	end,
 	config = {
 		display = {
