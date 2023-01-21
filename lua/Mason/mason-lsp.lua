@@ -1,16 +1,15 @@
 local mason_lsp = require("mason-lspconfig")
-local lspconfig = require("lspconfig")
+local lsp = require("lspconfig")
 mason_lsp.setup({
 	ensure_installed = {
 		"sumneko_lua",
 		"rust_analyzer",
 		"bashls",
-		"pylsp",
 		"vimls",
 	},
 })
 
-local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 local opts = { capabilities = capabilities }
 --lua
 local runtime_path = vim.split(package.path, ";")
@@ -85,9 +84,19 @@ require("rust-tools").setup({
 })
 
 require("go").setup()
-require("lspconfig").texlab.setup({})
+lsp.texlab.setup({})
+lsp.gopls.setup({})
+lsp.r_language_server.setup({})
+-- lsp.pylsp.setup({})
+lsp.pyright.setup({})
+lsp.eslint.setup({})
+lsp.tsserver.setup({})
+lsp.perlnavigator.setup({})
+lsp.bashls.setup({})
 
-require("lspconfig").gopls.setup({})
+lsp.dockerls.setup({})
+lsp.rome.setup({})
+
 -- Latex and Markdown LSP
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = { "*.org" },

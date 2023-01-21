@@ -22,9 +22,11 @@ return require("packer").startup({
 		-- Treesitter
 		use({
 			"nvim-treesitter/nvim-treesitter",
-			run = ":TSInstallFromGrammar",
+			run = ":TSUpdate",
 		})
 		use({ "nvim-treesitter/playground" })
+		use("nvim-treesitter/nvim-treesitter-context")
+		use("nvim-treesitter/nvim-treesitter-textobjects")
 		use({
 			"lewis6991/spellsitter.nvim",
 			config = function()
@@ -48,21 +50,17 @@ return require("packer").startup({
 		-- 	config = function()
 		-- 		require("texmagic").setup({
 		-- 			-- Config goes here; leave blank for defaults
-		-- 		})
+		-- 		}pcall(function))
 		-- 	end,
 		-- })
 
-		-- LSP
+		-- LSPforeach
 		use({ "neovim/nvim-lspconfig" })
 		use({
 			"glepnir/lspsaga.nvim",
 			branch = "main",
 			config = function()
-				local saga = require("lspsaga")
-
-				saga.init_lsp_saga({
-					-- your configuration
-				})
+				require("lspsaga").setup({})
 			end,
 		})
 		use({
@@ -76,6 +74,11 @@ return require("packer").startup({
 		-- Telescope and it's extensions
 		use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" } })
 		use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
+		use({
+			"benfowler/telescope-luasnip.nvim",
+			module = "telescope._extensions.luasnip", -- if you wish to lazy-load
+		})
+		use({ "nvim-telescope/telescope-packer.nvim" })
 
 		-- Git
 		use({ "lewis6991/gitsigns.nvim" })
@@ -88,6 +91,9 @@ return require("packer").startup({
 		use("projekt0n/github-nvim-theme")
 		-- Fancier statusline
 		use({ "nvim-lualine/lualine.nvim" })
+
+		-- Leap
+		use({ "ggandor/leap.nvim" })
 
 		-- CMP
 		use({
@@ -164,7 +170,7 @@ return require("packer").startup({
 		use({ "mbbill/undotree" })
 
 		-- 代码调试
-		use("puremourning/vimspector")
+		-- use("puremourning/vimspector")
 		-- Markdown
 		use({ "ellisonleao/glow.nvim" })
 		-- rust-tools
@@ -203,11 +209,22 @@ return require("packer").startup({
 		})
 
 		-- develop
-		use("folke/lua-dev.nvim")
+		use("folke/neodev.nvim")
 
 		-- go plugin
 		use("ray-x/go.nvim")
 		use("ray-x/guihua.lua")
+
+		-- mark
+		use("chentoast/marks.nvim")
+
+		-- color display and change
+		use({
+			"uga-rosa/ccc.nvim",
+			config = function()
+				require("spellsitter").setup()
+			end,
+		})
 	end,
 	config = {
 		display = {
