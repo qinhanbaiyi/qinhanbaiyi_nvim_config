@@ -1,6 +1,7 @@
 local M = {
 	"Treesitter.ts",
 	"Treesitter.spellsitter",
+	"Treesitter.ts_context",
 	"Treesitter.playground",
 }
 
