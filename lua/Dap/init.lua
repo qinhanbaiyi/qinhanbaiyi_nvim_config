@@ -2,6 +2,8 @@ local M = {}
 M = {
 	"Dap.dap",
 	"Dap.sniprun",
+	"Dap.dap_visual",
+	"Dap.refactoring",
 }
 
 for _, mod in ipairs(M) do

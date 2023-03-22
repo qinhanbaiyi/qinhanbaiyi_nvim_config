@@ -22,17 +22,6 @@ vim.o.hidden = true
 vim.o.termguicolors = true
 vim.g.onedark_terminal_italics = 2
 
--- Highlight on yank
--- vim.cmd(
--- 	[[
---   augroup YankHighlight
---     autocmd!
---     autocmd TextYankPost * silent! lua vim.highlight.on_yank()
---   augroup end
--- ]],
--- 	false
--- )
-
 vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
 	callback = function()

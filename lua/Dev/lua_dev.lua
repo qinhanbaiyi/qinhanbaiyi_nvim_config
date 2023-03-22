@@ -1,21 +1,5 @@
 -- IMPORTANT: make sure to setup neodev BEFORE lspconfig
-require("neodev").setup({
-	-- add any options here, or leave empty to use the default settings
-})
-
--- then setup your lsp server as usual
-local lspconfig = require("lspconfig")
-
--- example to setup sumneko and enable call snippets
-lspconfig.sumneko_lua.setup({
-	settings = {
-		Lua = {
-			completion = {
-				callSnippet = "Replace",
-			},
-		},
-	},
-})
+require("neodev").setup({})
 
 -- local luadev = require("neodev").setup({
 -- 	-- add any options here, or leave empty to use the default settings
@@ -35,4 +19,3 @@ lspconfig.sumneko_lua.setup({
 --
 -- local lspconfig = require("lspconfig")
 -- lspconfig.sumneko_lua.setup(luadev)
--- 详情见 lsp-installer.lua

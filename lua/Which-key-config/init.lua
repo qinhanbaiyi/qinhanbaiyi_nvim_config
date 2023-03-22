@@ -106,6 +106,8 @@ wk.register({
 			g = { "<cmd>Telescope live_grep<cr>", "File Live-grep" },
 			b = { "<cmd>Telescope buffers<cr>", "Find File buffer" },
 			h = { "<cmd>Telescope help_tags<cr>", "Find Help tags" },
+			e = { "<cmd>Telescope diagnostics<cr>", "Find Diagnostics" },
+			t = { "<cmd>Telescope treesitter<cr>", "Lists Function names, variables, from Treesitter" },
 		},
 		l = {
 			name = "LSP",

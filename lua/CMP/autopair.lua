@@ -69,14 +69,14 @@ npairs.add_rules({
 	end),
 })
 
-npairs.add_rules({
-	Rule("<", ">"):with_pair(cond.done()),
-	Rule("", ">")
-		:with_pair(cond.none())
-		:with_move(function(opts)
-			return opts.char == ">"
-		end)
-		:with_cr(cond.none())
-		:with_del(cond.none())
-		:use_key(">"),
-})
+-- npairs.add_rules({
+-- 	Rule("<", ">"):with_pair(cond.done()),
+-- 	Rule("", ">")
+-- 		:with_pair(cond.none())
+-- 		:with_move(function(opts)
+-- 			return opts.char == ">"
+-- 		end)
+-- 		:with_cr(cond.none())
+-- 		:with_del(cond.none())
+-- 		:use_key(">"),
+-- })
