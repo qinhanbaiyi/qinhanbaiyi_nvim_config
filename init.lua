@@ -1,6 +1,7 @@
 local M = {
-	"plugins",
-	"Telescope-config.init",
+	-- "plugins",
+	"plugins.lazy",
+	"Telescope",
 	"Treesitter",
 	"nvim-setting",
 	"Annotation",
@@ -12,9 +13,9 @@ local M = {
 	"LSP",
 	"Mason",
 	"Dap",
-	"ftplugin.init",
 	"Git",
 	"Dev",
+	"Text",
 }
 
 for _, mod in ipairs(M) do

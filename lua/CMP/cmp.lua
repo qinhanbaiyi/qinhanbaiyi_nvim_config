@@ -8,7 +8,6 @@ table.insert(runtime_path, "lua/?/init.lua")
 -------------------------------------------------------------------------------
 --------------------------- FORMAT AND SETTING --------------------------------
 -------------------------------------------------------------------------------
-
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = "menuone,noselect"
 -- luasnip setup
@@ -17,98 +16,20 @@ local lspkind = require("lspkind")
 
 -- nvim-cmp setup
 local cmp = require("cmp")
-
--- 自动提示1 详情信息
--- @cmpFormat2
--- local cmpFormat1 = {
--- 	formatting = function(entry, vim_item)
--- 		-- fancy icons and a name of kind
--- 		vim_item.kind = lspkind.presets.default[vim_item.kind] .. " " .. vim_item.kind
--- 		-- set a name for each source
--- 		vim_item.menu = ({
--- 			buffer = "[Buffer]",
--- 			nvim_lsp = "[LSP]",
--- 			luasnip = "[LuaSnip]",
--- 			nvim_lua = "[Lua]",
--- 			cmp_tabnine = "[TabNine]",
--- 			look = "[Look]",
--- 			path = "[Path]",
--- 			spell = "[Spell]",
--- 			calc = "[Calc]",
--- 			emoji = "[Emoji]",
--- 			cmdline = "[CMDLINE]",
--- 			dictionary = "[DICT]",
--- 		})[entry.source.name]
--- 		return vim_item
--- 	end,
--- }
-
--- local cmp_kinds = kind_icons
-
--- @cmpFormat2
--- local cmpFormat2 = {
--- 	formatting = function(_, vim_item)
--- 		vim_item.kind = (cmp_kinds[vim_item.kind] or "") .. vim_item.kind
--- 		return vim_item
--- 	end,
--- }
-
--- -- @cmpFormat3
--- local cmpFormat3 = {
--- 	formatting = function(entry, vim_item)
--- 		local kind_icons = {
--- 			Text = "",
--- 			Method = "",
--- 			Function = "",
--- 			Constructor = "",
--- 			Field = "ﰠ",
--- 			Variable = "",
--- 			Class = "ﴯ",
--- 			Interface = "",
--- 			Module = "",
--- 			Property = "ﰠ",
--- 			Value = "",
--- 			Enum = "",
--- 			Keyword = "",
--- 			Snippet = "",
--- 			Color = "",
--- 			File = "",
--- 			Reference = "",
--- 			Folder = "",
--- 			EnumMember = "",
--- 			Constant = "",
--- 			Struct = "פּ",
--- 			Event = "",
--- 			Operator = "",
--- 			TypeParameter = "",
--- 		}
--- 		-- Kind icons: concatenates icons
--- 		vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind], vim_item.kind)
--- 		-- Source
--- 		vim_item.menu = ({
--- 			buffer = "[Buffer]",
--- 			nvim_lsp = "[LSP]",
--- 			luasnip = "[LuaSnip]",
--- 			nvim_lua = "[Lua]",
--- 			cmp_tabnine = "[TabNine]",
--- 			look = "[Look]",
--- 			path = "[Path]",
--- 			spell = "[Spell]",
--- 			calc = "[Calc]",
--- 			emoji = "[Emoji]",
--- 			cmdline = "[CMDLINE]",
--- 			dictionary = "[DICT]",
--- 			latex_symbols = "[LaTeX]",
--- 		})[entry.source.name]
--- 		return vim_item
--- 	end,
--- }
-
 -- @lspkind1
 local types = require("cmp.types")
 local str = require("cmp.utils.str")
 local lspkind1 = {
 	format = lspkind.cmp_format({
+		menu = {
+			buffer = "[Buffer]",
+			luasnip = "[LuaSnip]",
+			latex_symbols = "[Latex]",
+			nvim_lsp = "[LSP]",
+			nvim_lua = "[Lua]",
+			cmp_tabnine = "[TN]",
+			path = "[path]",
+		},
 		before = function(entry, vim_item)
 			-- Get the full snippet (and only keep first line)
 			local word = entry:get_insert_text()
@@ -116,13 +37,6 @@ local lspkind1 = {
 				word = vim.lsp.util.parse_snippet(word)
 			end
 			word = str.oneline(word)
-
-			-- concatenates the string
-			-- local max = 50
-			-- if string.len(word) >= max then
-			-- 	local before = string.sub(word, 1, math.floor((max - 3) / 2))
-			-- 	word = before .. "..."
-			-- end
 
 			if
 				entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet
@@ -135,7 +49,62 @@ local lspkind1 = {
 			return vim_item
 		end,
 	}),
+	-- fields = { "kind", "abbr", "menu" },
 }
+
+-- local lspkind = require("lspkind")
+--
+-- local source_mapping = {
+--      buffer = "[Buffer]",
+--      nvim_lsp = "[LSP]",
+--      nvim_lua = "[Lua]",
+--      cmp_tabnine = "[TN]",
+--      path = "[path]",
+-- }
+--
+-- require("cmp").setup({
+--      formatting = {
+--              format = function(entry, vim_item)
+--                      -- if you have lspkind installed, you can use it like
+--                      -- in the following line:
+--                      vim_item.kind = lspkind.symbolic(vim_item.kind, { mode = "symbol" })
+--                      vim_item.menu = source_mapping[entry.source.name]
+--                      if entry.source.name == "cmp_tabnine" then
+--                              local detail = (entry.completion_item.data or {}).detail
+--                              vim_item.kind = ""
+--                              if detail and detail:find(".*%%.*") then
+--                                      vim_item.kind = vim_item.kind .. " " .. detail
+--                              end
+--
+--                              if (entry.completion_item.data or {}).multiline then
+--                                      vim_item.kind = vim_item.kind .. " " .. "[ML]"
+--                              end
+--                      end
+--                      local maxwidth = 80
+--                      vim_item.abbr = string.sub(vim_item.abbr, 1, maxwidth)
+--                      return vim_item
+--              end,
+--      },
+-- })
+
+-------------------------------------------------------------------------------
+--------------------------------- TabNine -------------------------------------
+-------------------------------------------------------------------------------
+-- local tabnine = require("cmp_tabnine.config")
+--
+-- tabnine:setup({
+--      max_lines = 1000,
+--      max_num_results = 20,
+--      sort = true,
+--      run_on_every_keystroke = true,
+--      snippet_placeholder = "..",
+--      ignored_file_types = {
+--              -- default is not to ignore
+--              -- uncomment to ignore in lua:
+--              -- lua = true
+--      },
+--      show_prediction_strength = false,
+-- })
 
 -------------------------------------------------------------------------------
 --------------------------------- SETTING -------------------------------------
@@ -170,7 +139,7 @@ cmp.setup({
 		{ name = "luasnip", group_index = 1, priority = 80 },
 		{
 			name = "buffer",
-			keyword_length = 2,
+			keyword_length = 4,
 			option = {
 				get_bufnrs = function()
 					local bufs = {}
@@ -182,8 +151,9 @@ cmp.setup({
 			},
 			group_index = 1,
 		},
+		{ name = "nvim_lsp_signature_help", group_index = 1, priority = 80 },
 		{ name = "path" },
-		--{name = "cmp_tabnine"},
+		-- { name = "cmp_tabnine" },
 		--{name = "calc"},
 		--{name = "spell"},
 		--{name = "emoji"}
@@ -193,6 +163,24 @@ cmp.setup({
 		documentation = cmp.config.window.bordered(),
 	},
 })
+vim.cmd([[
+" gray
+highlight! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#808080
+" blue
+highlight! CmpItemAbbrMatch guibg=NONE guifg=#569CD6
+highlight! link CmpItemAbbrMatchFuzzy CmpItemAbbrMatch
+" light blue
+highlight! CmpItemKindVariable guibg=NONE guifg=#9CDCFE
+highlight! link CmpItemKindInterface CmpItemKindVariable
+highlight! link CmpItemKindText CmpItemKindVariable
+" pink
+highlight! CmpItemKindFunction guibg=NONE guifg=#C586C0
+highlight! link CmpItemKindMethod CmpItemKindFunction
+" front
+highlight! CmpItemKindKeyword guibg=NONE guifg=#D4D4D4
+highlight! link CmpItemKindProperty CmpItemKindKeyword
+highlight! link CmpItemKindUnit CmpItemKindKeyword
+]])
 
 -------------------------------------------------------------------------------
 ------------------------------- EXTENSIONS ------------------------------------
@@ -221,19 +209,11 @@ cmp.setup.cmdline(":", {
 			group_index = 1,
 		},
 		{ name = "path" },
-		{ name = "cmp_tabnine" },
-		--{name = "calc"},
-		--{name = "spell"},
-		--{name = "emoji"}
+		-- { name = "cmp_tabnine" },
+		-- { name = "calc" },
+		{ name = "otter" },
 	},
 })
-
 -------------------------------------------------------------------------------
 ------------------------------- EXTENSIONS ------------------------------------
 -------------------------------------------------------------------------------
-
--- require('Comment.utils').ctype.{line,block}
---
--- require('Comment.utils').cmode.{toggle,comment,uncomment}
---
--- require('Comment.utils').cmotion.{line,char,v,V}

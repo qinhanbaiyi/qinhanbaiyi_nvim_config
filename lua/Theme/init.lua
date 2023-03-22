@@ -1,5 +1,7 @@
 local M = {
-	"Theme.github",
+	-- "Theme.github",
+	-- "Theme.material",
+	"Theme.onedark",
 	"Theme.barbar",
 	"Theme.web-devicons",
 	"Theme.symbols-outline",
@@ -7,7 +9,7 @@ local M = {
 	-- "Theme.lightline",
 	"Theme.lualine",
 	"Theme.nvim-tree",
-	"Theme.autosession",
+	-- "Theme.autosession",
 }
 
 for _, mod in ipairs(M) do
