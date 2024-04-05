@@ -1,6 +1,8 @@
 ----------------------------------------------------------------------
 -------------------------- Telescope Setup ---------------------------
 ----------------------------------------------------------------------
+local lst = require("telescope").extensions.luasnip
+local luasnip = require("luasnip")
 
 -- require("telescope").load_extension("luasnip")
 require("telescope").setup({

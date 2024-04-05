@@ -1,0 +1,30 @@
+if vim.loader then
+	vim.loader.enable()
+	vim.schedule(function()
+		vim.notify("nvim loader is enabled")
+	end)
+end
+
+-- require("util.profiler").start()
+
+vim.api.nvim_create_autocmd("User", {
+	pattern = "LazyVimStarted",
+	callback = function()
+		vim.schedule(function()
+			-- require("util.profiler").inspect()
+		end)
+	end,
+})
+
+require("config.lazy")({
+	debug = false,
+	defaults = {
+		lazy = true,
+		-- cond = false,
+	},
+	performance = {
+		cache = {
+			enabled = true,
+		},
+	},
+})

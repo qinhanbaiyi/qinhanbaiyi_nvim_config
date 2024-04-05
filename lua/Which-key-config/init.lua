@@ -108,6 +108,7 @@ wk.register({
 			h = { "<cmd>Telescope help_tags<cr>", "Find Help tags" },
 			e = { "<cmd>Telescope diagnostics<cr>", "Find Diagnostics" },
 			t = { "<cmd>Telescope treesitter<cr>", "Lists Function names, variables, from Treesitter" },
+			l = { "<cmd>Telescope luasnip<cr>", "Find Luasnips" },
 		},
 		l = {
 			name = "LSP",

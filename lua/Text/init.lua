@@ -1,6 +1,6 @@
 local M = {}
 M = {
-	"Text.leap",
+	-- "Text.leap",
 }
 
 for _, mod in ipairs(M) do
