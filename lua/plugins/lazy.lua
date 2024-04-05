@@ -87,6 +87,16 @@ require("lazy").setup({
 	{ "lewis6991/gitsigns.nvim" },
 	{ "sindrets/diffview.nvim" },
 
+	-- Copilot
+	{
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function()
+			require("copilot").setup({})
+		end,
+	},
+
 	-- diagnose
 	{
 		"folke/trouble.nvim",
@@ -104,8 +114,23 @@ require("lazy").setup({
 	-- Fancier statusline
 	{ "nvim-lualine/lualine.nvim" },
 
-	-- Leap
-	{ "ggandor/leap.nvim" },
+	-- Jump
+	-- { "ggandor/leap.nvim" },
+	{
+		"folke/flash.nvim",
+		-- event = "VeryLazy",
+		---@type Flash.Config
+		opts = {},
+		-- stylua: ignore
+		keys = {
+		  { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+		  { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+		  { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+		  { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+		  { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+		}
+,
+	},
 
 	-- CMP
 	{
@@ -125,16 +150,18 @@ require("lazy").setup({
 	"hrsh7th/cmp-nvim-lsp",
 	"hrsh7th/cmp-nvim-lua",
 	"hrsh7th/cmp-nvim-lsp-signature-help",
-	{
-		"tzachar/cmp-tabnine",
-		build = "./install.sh",
-		dependencies = "hrsh7th/nvim-cmp",
-	},
 	{ "hrsh7th/cmp-buffer" },
 	{ "hrsh7th/cmp-nvim-lua" },
 	{ "hrsh7th/cmp-path" },
 	{ "saadparwaiz1/cmp_luasnip" },
 	{ "hrsh7th/cmp-cmdline" },
+	{
+		"zbirenbaum/copilot-cmp",
+		config = function()
+			require("copilot_cmp").setup()
+		end,
+	},
+
 	--美化自动完成提示信息
 	{ "onsails/lspkind-nvim" },
 
@@ -189,14 +216,14 @@ require("lazy").setup({
 	-- 符号匹配
 	"tpope/vim-surround",
 
-	{ "michaelb/sniprun", build = "bash ./install.sh" },
+	{ "michaelb/sniprun", branch = "master", build = "sh install.sh" },
 
 	-- make us pay attention to work
 	{ "junegunn/goyo.vim" },
 
 	-- Code Debug
 	{ "mfussenegger/nvim-dap" },
-	{ "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap" } },
+	{ "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
 	{ "jbyuki/one-small-step-for-vimkind" },
 	{ "theHamsta/nvim-dap-virtual-text" },
 

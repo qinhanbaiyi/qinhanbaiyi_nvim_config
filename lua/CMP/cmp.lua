@@ -27,7 +27,6 @@ local lspkind1 = {
 			latex_symbols = "[Latex]",
 			nvim_lsp = "[LSP]",
 			nvim_lua = "[Lua]",
-			cmp_tabnine = "[TN]",
 			path = "[path]",
 		},
 		before = function(entry, vim_item)
@@ -149,7 +148,7 @@ cmp.setup({
 					return vim.tbl_keys(bufs)
 				end,
 			},
-			group_index = 1,
+			group_index = 2,
 		},
 		{ name = "nvim_lsp_signature_help", group_index = 1, priority = 80 },
 		{ name = "path" },

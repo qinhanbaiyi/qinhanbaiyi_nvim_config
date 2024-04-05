@@ -24,7 +24,7 @@ require("formatter").setup({
 		markdown = {
 			function()
 				return {
-					exe = "npx prettier",
+					exe = "prettier",
 					args = {
 						"--config-precedence",
 						"prefer-file",
