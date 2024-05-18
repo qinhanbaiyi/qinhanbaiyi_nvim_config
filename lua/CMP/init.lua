@@ -2,7 +2,8 @@ local M = {
 	"CMP.cmp",
 	"CMP.spellcheck",
 	"CMP.autopair",
-	"CMP.copilot",
+	"CMP.codeium",
+	-- "CMP.copilot",
 }
 for _, mod in ipairs(M) do
 	local ok, err = pcall(require, mod)

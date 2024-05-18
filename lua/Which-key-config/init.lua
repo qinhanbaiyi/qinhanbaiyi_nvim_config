@@ -134,11 +134,11 @@ wk.register({
 			N = { "<cmd>Lspsaga diagnostic_jump_prev<cr>", "Go To Previous Diagnostic" },
 			f = { "<cmd>lua vim.lsp.buf.format {async = true}<CR>", "LSP Format" },
 		},
-		ga = { "<cmd>Lspsaga lsp_finder<CR>", "Async Lsp Finder" },
+		-- ga = { "<cmd>Lspsaga lsp_finder<CR>", "Async Lsp Finder" },
 		ca = { "<cmd>Lspsaga code_action<CR>", "Code Action" },
 		gd = { "<cmd>Lspsaga peek_definition<CR>", "Preview Definition" },
 		gr = { "<cmd>Lspsaga rename<CR>", "Rename" },
-		gs = { "<cmd>Lspsaga signature_help<CR>", "SignatureHelp" },
+		-- gs = { "<cmd>Lspsaga signature_help<CR>", "SignatureHelp" },
 		gh = { "<cmd>Lspsaga hover_doc<CR>", "Lsp Hover" },
 		h = {
 			name = "Gitsigns",

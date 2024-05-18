@@ -1,10 +1,22 @@
 require("mason-lspconfig").setup({
 	ensure_installed = {
-		"rust_analyzer",
 		"bashls",
 		"vimls",
+		"lua_ls",
+		"rust_analyzer",
 	},
+	["rust_analyzer"] = function() end,
 })
+
+vim.g.rustaceanvim = {
+	-- Plugin configuration
+	tools = {},
+	-- LSP configuration
+
+	-- DAP configuration
+	dap = {},
+}
+
 local lsp = require("lspconfig")
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -60,14 +72,21 @@ lsp.pyright.setup({})
 lsp.tsserver.setup({})
 lsp.perlnavigator.setup({})
 lsp.bashls.setup({})
+lsp.clangd.setup({
+	capabilities = capabilities,
+	cmd = {
+		"clangd",
+		"--offset-encoding=utf-16",
+	},
+})
 -- lsp.vuels.setup({})
 -- lsp.volar.setup({
 -- 	filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
 -- })
+-- lsp.rust_analyzer.setup({})
 lsp.tailwindcss.setup({})
 
 lsp.dockerls.setup({})
--- lsp.rome.setup({})
 
 -- Latex and Markdown LSP
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {

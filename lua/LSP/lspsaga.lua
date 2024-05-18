@@ -1,7 +1,6 @@
 -- require("lspsaga").setup({})
 local saga = require("lspsaga")
 
--- -- vim.wo.winbar = require("lspsaga.symbolwinbar"):get_winbar()
 --
 -- -- Example:
 -- local function get_file_name(include_path)
