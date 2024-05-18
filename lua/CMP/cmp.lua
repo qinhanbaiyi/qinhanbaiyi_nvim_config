@@ -32,9 +32,9 @@ local lspkind1 = {
 		before = function(entry, vim_item)
 			-- Get the full snippet (and only keep first line)
 			local word = entry:get_insert_text()
-			if entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet then
-				word = vim.lsp.util.parse_snippet(word)
-			end
+			-- if entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet then
+			-- 	word = vim.lsp.util.parse_snippet(word)
+			-- end
 			word = str.oneline(word)
 
 			if
@@ -126,12 +126,15 @@ cmp.setup({
 		}),
 		["<Tab>"] = function(fallback)
 			if cmp.visible() then
-				cmp.select_next_item()
+				cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace, select = false })
 			else
 				fallback()
 			end
 		end,
-		["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "s" }),
+		["<S-Tab>"] = cmp.mapping(
+			cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select, select = false }),
+			{ "i", "s" }
+		),
 	},
 	sources = {
 		{ name = "nvim_lsp", group_index = 1, priority = 80 },
@@ -162,24 +165,23 @@ cmp.setup({
 		documentation = cmp.config.window.bordered(),
 	},
 })
-vim.cmd([[
-" gray
-highlight! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#808080
-" blue
-highlight! CmpItemAbbrMatch guibg=NONE guifg=#569CD6
-highlight! link CmpItemAbbrMatchFuzzy CmpItemAbbrMatch
-" light blue
-highlight! CmpItemKindVariable guibg=NONE guifg=#9CDCFE
-highlight! link CmpItemKindInterface CmpItemKindVariable
-highlight! link CmpItemKindText CmpItemKindVariable
-" pink
-highlight! CmpItemKindFunction guibg=NONE guifg=#C586C0
-highlight! link CmpItemKindMethod CmpItemKindFunction
-" front
-highlight! CmpItemKindKeyword guibg=NONE guifg=#D4D4D4
-highlight! link CmpItemKindProperty CmpItemKindKeyword
-highlight! link CmpItemKindUnit CmpItemKindKeyword
-]])
+
+-- gray
+vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { bg = "NONE", strikethrough = true, fg = "#808080" })
+-- blue
+vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { bg = "NONE", fg = "#569CD6" })
+vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { link = "CmpIntemAbbrMatch" })
+-- light blue
+vim.api.nvim_set_hl(0, "CmpItemKindVariable", { bg = "NONE", fg = "#9CDCFE" })
+vim.api.nvim_set_hl(0, "CmpItemKindInterface", { link = "CmpItemKindVariable" })
+vim.api.nvim_set_hl(0, "CmpItemKindText", { link = "CmpItemKindVariable" })
+-- pink
+vim.api.nvim_set_hl(0, "CmpItemKindFunction", { bg = "NONE", fg = "#C586C0" })
+vim.api.nvim_set_hl(0, "CmpItemKindMethod", { link = "CmpItemKindFunction" })
+-- front
+vim.api.nvim_set_hl(0, "CmpItemKindKeyword", { bg = "NONE", fg = "#D4D4D4" })
+vim.api.nvim_set_hl(0, "CmpItemKindProperty", { link = "CmpItemKindKeyword" })
+vim.api.nvim_set_hl(0, "CmpItemKindUnit", { link = "CmpItemKindKeyword" })
 
 -------------------------------------------------------------------------------
 ------------------------------- EXTENSIONS ------------------------------------
@@ -211,6 +213,24 @@ cmp.setup.cmdline(":", {
 		-- { name = "cmp_tabnine" },
 		-- { name = "calc" },
 		{ name = "otter" },
+	},
+	mapping = {
+		["<Tab>"] = {
+			c = function(_)
+				if cmp.visible() then
+					if #cmp.get_entries() == 1 then
+						cmp.confirm({ select = true })
+					else
+						cmp.select_next_item()
+					end
+				else
+					cmp.complete()
+					if #cmp.get_entries() == 1 then
+						cmp.confirm({ select = true })
+					end
+				end
+			end,
+		},
 	},
 })
 -------------------------------------------------------------------------------

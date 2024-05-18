@@ -8,7 +8,7 @@ keymap("s", "<c-u>", "<NOP>", opts)
 keymap("s", "<c-i>", "<NOP>", opts)
 
 -- W -> :w
-keymap("n", "W", ":w<CR>", opts)
+keymap("n", "<c-s>", ":w<CR>", opts)
 
 -- no highlight
 keymap("n", "<Leader>h", ":set hlsearch<CR>", opts)

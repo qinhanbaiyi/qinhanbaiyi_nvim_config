@@ -6,6 +6,7 @@ vim.cmd("set scrolloff=5")
 vim.cmd("set wrap")
 vim.cmd("set foldenable")
 vim.cmd("set colorcolumn=100")
+vim.cmd("set signcolumn=yes")
 vim.o.mouse = "a"
 vim.o.showcmd = true
 vim.o.splitright = true

@@ -1,6 +1,6 @@
 require("sniprun").setup({
-	selected_interpreters = {}, --# use those instead of the default for the current filetype
-	repl_enable = {}, --# enable REPL-like behavior for the given interpreters
+	selected_interpreters = { "Python3_jupyter" }, --# use those instead of the default for the current filetype
+	-- repl_enable = { "Python3_original" }, --# enable REPL-like behavior for the given interpreters
 	repl_disable = {}, --# disable REPL-like behavior for the given interpreters
 
 	interpreter_options = { --# intepreter-specific options, see docs / :SnipInfo <name>
