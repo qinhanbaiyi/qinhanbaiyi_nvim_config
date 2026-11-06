@@ -1,34 +1,22 @@
-vim.cmd("set number")
-vim.cmd("set relativenumber")
-vim.cmd("set cursorline")
-vim.cmd("set noexpandtab")
-vim.cmd("set scrolloff=5")
-vim.cmd("set wrap")
-vim.cmd("set foldenable")
-vim.cmd("set colorcolumn=100")
-vim.cmd("set signcolumn=yes")
-vim.o.mouse = "a"
-vim.o.showcmd = true
-vim.o.splitright = true
-vim.o.splitbelow = true
-vim.o.ignorecase = true
-vim.o.wildmenu = true
-vim.o.smartcase = true
-vim.o.updatetime = 100
-vim.o.ttyfast = true
-vim.o.visualbell = true
---Do not save when switching buffers (note: this is now a default on master)
-vim.o.hidden = true
---Set colorscheme (order is important here)
-vim.o.termguicolors = true
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.cursorline = true
+vim.opt.expandtab = false
+vim.opt.scrolloff = 5
+vim.opt.wrap = true
+vim.opt.foldenable = true
+vim.opt.colorcolumn = "100"
+vim.opt.signcolumn = "yes:2"
+vim.opt.mouse = "a"
+vim.opt.showcmd = true
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.ignorecase = true
+vim.opt.wildmenu = true
+vim.opt.smartcase = true
+vim.opt.updatetime = 100
+vim.opt.ttyfast = true
+vim.opt.visualbell = true
+vim.opt.hidden = true
+vim.opt.termguicolors = true
 vim.g.onedark_terminal_italics = 2
-vim.o.signcolumn = "yes:2"
-
-vim.g.maplocalleader = "\\"
-
-vim.api.nvim_create_autocmd("TextYankPost", {
-	pattern = "*",
-	callback = function()
-		vim.hl.on_yank()
-	end,
-})

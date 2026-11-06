@@ -1,9 +1,57 @@
+-- SnipRun executes a line range. In normal mode use the containing statement.
+local function sniprun_range()
+	local line = vim.api.nvim_win_get_cursor(0)[1]
+	if vim.fn.mode():find("[vV\22]") then
+		local anchor = vim.fn.line("v")
+		vim.cmd.normal({ args = { vim.keycode("<Esc>") }, bang = true })
+		return math.min(anchor, line), math.max(anchor, line)
+	end
+
+	local parser = vim.treesitter.get_parser(0)
+	if not parser then
+		return line, line
+	end
+	parser:parse()
+	local node = vim.treesitter.get_node()
+	if not node then
+		return line, line
+	end
+	while not node:type():find("statement", 1, true) and node:type() ~= "function_definition" do
+		local parent = node:parent()
+		if not parent or not parent:parent() then
+			break
+		end
+		node = parent
+	end
+
+	local start_row, _, end_row, end_col = node:range()
+	-- A range ending at column zero excludes that final line.
+	if end_col == 0 and end_row > start_row then
+		end_row = end_row - 1
+	end
+	return start_row + 1, end_row + 1
+end
+
+local function execute_sniprun()
+	local first, last = sniprun_range()
+	require("sniprun.api").run_range(first, last)
+	local total_lines = vim.api.nvim_buf_line_count(0)
+	if last >= total_lines then
+		vim.api.nvim_win_set_cursor(0, { total_lines, 0 })
+	else
+		vim.api.nvim_win_set_cursor(0, { last + 1, 9999 })
+	end
+end
+
 return {
 	{
 		"michaelb/sniprun",
 		branch = "master",
-		filetypes = { "python", "r" },
 		event = "VeryLazy",
+		keys = {
+			{ "\\", execute_sniprun, mode = { "n", "v" }, desc = "SnipRun" },
+			{ "R", ":SnipRun<CR>", mode = "s", desc = "SnipRun", silent = true },
+		},
 		build = "sh install.sh",
 		-- do 'sh install.sh 1' if you want to force compile locally
 		-- (instead of fetching a binary from the github release). Requires Rust >= 1.65

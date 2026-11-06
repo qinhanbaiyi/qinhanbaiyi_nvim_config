@@ -1,32 +1,18 @@
-local M = {
-	-- "plugins",
-	"config.autocmds",
-	"config.keymaps",
-	"config.options",
-	"config.lazy",
-	"config.which",
-	-- "plugins.lazy",
-	-- "Telescope",
-	-- "Treesitter",
-	-- "nvim-setting",
-	-- "Annotation",
-	-- "CMP",
-	-- "Snippets",
-	-- "Term",
-	-- "Which-key-config",
-	-- "Theme",
-	-- "LSP",
-	-- "Mason",
-	-- "Dap",
-	-- "Git",
-	-- "Dev",
-	-- "Text",
-	-- "autocmd",
-}
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 
-for _, mod in ipairs(M) do
-	local ok, err = pcall(require, mod)
-	if not ok then
-		print("Error while calling init.lua:", err)
+local ok, err = xpcall(function()
+	require("config.options")
+	require("config.keymaps")
+	require("config.autocmds")
+	require("config.lazy")
+	require("config.which")
+end, debug.traceback)
+
+if not ok then
+	if vim.tbl_contains(vim.v.argv, "--headless") then
+		io.stderr:write(err .. "\n")
+		vim.cmd.cquit()
 	end
+	error(err, 0)
 end

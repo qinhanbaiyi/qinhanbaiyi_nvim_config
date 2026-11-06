@@ -1,17 +1,4 @@
-----------------------------------------------------------------------
----------------------------- Setup -----------------------------------
-----------------------------------------------------------------------
 local wk = require("which-key")
---[[ local opts = {
-	mode = "n", -- NORMAL mode
-	-- prefix: use "<leader>f" for example for mapping everything related to finding files
-	-- the prefix is prepended to every mapping part of `mappings`
-	prefix = "",
-	buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-	silent = true, -- use `silent` when creating keymaps
-	noremap = true, -- use `noremap` when creating keymaps
-	nowait = false, -- use `nowait` when creating keymaps
-} ]]
 
 -- diagnostic
 local diagnostic_goto = function(next, severity)
@@ -24,50 +11,6 @@ local diagnostic_goto = function(next, severity)
 				vim.diagnostic.open_float({ bufnr = bufnr, scope = "cursor", focus = false })
 			end,
 		})
-	end
-end
-
--- SnipRun executes a line range. In normal mode use the containing statement.
-local function sniprun_range()
-	local line = vim.api.nvim_win_get_cursor(0)[1]
-	if vim.fn.mode():find("[vV\22]") then
-		local anchor = vim.fn.line("v")
-		vim.cmd.normal({ args = { vim.keycode("<Esc>") }, bang = true })
-		return math.min(anchor, line), math.max(anchor, line)
-	end
-
-	local parser = vim.treesitter.get_parser(0)
-	if not parser then
-		return line, line
-	end
-	parser:parse()
-	local node = vim.treesitter.get_node()
-	if not node then
-		return line, line
-	end
-	while not node:type():find("statement", 1, true) and node:type() ~= "function_definition" do
-		local parent = node:parent()
-		if not parent or not parent:parent() then
-			break
-		end
-		node = parent
-	end
-
-	local start_row, _, end_row, end_col = node:range()
-	if end_col == 0 and end_row > start_row then
-		end_row = end_row - 1
-	end
-	return start_row + 1, end_row + 1
-end
-
-local function execute_sniprun()
-	local first, last = sniprun_range()
-	require("sniprun.api").run_range(first, last)
-	local total_lines = vim.api.nvim_buf_line_count(0)
-	if last >= total_lines then
-		vim.api.nvim_win_set_cursor(0, { total_lines, 0 })
-	else
-		vim.api.nvim_win_set_cursor(0, { last + 1, 9999 })
 	end
 end
 
@@ -103,32 +46,9 @@ wk.add({
 	-- highlights under cursor
 	{ "<leader>ui", vim.show_pos, mode = "n", desc = "Inspect Pos" },
 	{ "<leader>uI", "<cmd>InspectTree<cr>", mode = "n", desc = "Inspect Tree" },
-
-	-- floating terminal
-	-- { "<leader>fT", function() Snacks.terminal() end, mode = "n", desc = "Terminal (cwd)" },
-	-- { "<leader>ft", function() Snacks.terminal(nil, { cwd = LazyVim.root() }) end, mode = "n", desc = "Terminal (Root Dir)" },
-	-- { "<c-/>", function() Snacks.terminal(nil, { cwd = LazyVim.root() }) end, mode = "n", desc = "Terminal (Root Dir)" },
-	-- { "<c-_>", function() Snacks.terminal(nil, { cwd = LazyVim.root() }) end, mode = "n", desc = "which_key_ignore" }
-
-	{
-		"\\",
-		execute_sniprun,
-		mode = { "n", "v" },
-		desc = "SnipRun",
-	},
-	-- {
-	-- 	"\\",
-	-- 	function()
-	-- 		require("sniprun").run("v")
-	-- 		execute_sniprun()
-	-- 	end,
-	-- 	mode = "v",
-	-- 	desc = "SnipRun",
-	-- },
 })
 
--- { "", "", mode = "", desc = "" },
--- Toggle
+-- Display and diagnostic toggles
 Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
 Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
 Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
@@ -144,7 +64,6 @@ Snacks.toggle.treesitter():map("<leader>uT")
 Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
 Snacks.toggle.dim():map("<leader>uD")
 Snacks.toggle.animate():map("<leader>ua")
-Snacks.toggle.indent():map("<leader>ug")
 Snacks.toggle.scroll():map("<leader>uS")
 Snacks.toggle.profiler():map("<leader>dpp")
 Snacks.toggle.profiler_highlights():map("<leader>dph")
@@ -152,16 +71,14 @@ if vim.lsp.inlay_hint then
 	Snacks.toggle.inlay_hints():map("<leader>uh")
 end
 
-----------------------------------------------------------------------
-
 wk.add({
 	mode = { "n", "v" },
 
 	-- Windows Movement
 	{ "<leader><leader>", group = "Windows Movement", remap = false },
 	{ "<leader><leader>h", "<c-w>h", desc = "Left", remap = false },
-	{ "<leader><leader>j", "<c-w>j", desc = "Up", remap = false },
-	{ "<leader><leader>k", "<c-w>k", desc = "Down", remap = false },
+	{ "<leader><leader>j", "<c-w>j", desc = "Down", remap = false },
+	{ "<leader><leader>k", "<c-w>k", desc = "Up", remap = false },
 	{ "<leader><leader>l", "<c-w>l", desc = "Right", remap = false },
 	{ "<leader><leader>-", "<C-W>s", mode = "n", desc = "Split Window Below", remap = true },
 	{ "<leader><leader>|", "<C-W>v", mode = "n", desc = "Split Window Right", remap = true },
@@ -173,21 +90,19 @@ wk.add({
 	{ "gr", "<cmd>Lspsaga finder ref<CR>", desc = "References", nowait = true },
 	{ "gI", "<cmd>Lspsaga finder imp<CR>", desc = "Goto Implementation" },
 	{ "gy", "<cmd>Lspsaga peek_type_definition<CR>", desc = "Goto T[y]pe Definition" },
-	{ "gD", "<cmd>Lspsaga goto_definition<CR>", desc = "Goto Declaration" },
+	{ "gD", "<cmd>Lspsaga goto_definition<CR>", desc = "Go to Definition" },
 	{ "gh", "<cmd>Lspsaga hover_doc<CR>", desc = "Lsp Hover", remap = false },
-	{ "gH", vim.lsp.buf.signature_help, desc = "Lsp Hover", remap = false },
+	{ "gH", vim.lsp.buf.signature_help, desc = "Signature Help", remap = false },
 
 	-- Code
 	{ "<leader>c", group = "Code" },
 	{ "<leader>cr", "<cmd>Lspsaga rename<cr>", desc = "Rename", remap = false },
 	{ "<leader>cf", "<cmd>lua vim.lsp.buf.format {async = true}<CR>", desc = "LSP Format", remap = false },
-	{ "<leader>cl", "<cmd>checkhealth vim.lsp<cr>", desc = "LspInfo", remap = false },
+	{ "<leader>cl", "<cmd>checkhealth vim.lsp<cr>", desc = "LSP Health", remap = false },
 	{ "<leader>ca", "<cmd>Lspsaga code_action<CR>", desc = "Code Action", remap = false },
 	{ "<leader>cc", vim.lsp.codelens.run, desc = "Run Codelens", mode = { "n", "v" } },
 	{ "<leader>cC", function() vim.lsp.codelens.enable(true, { bufnr = 0 }) end, desc = "Refresh & Display Codelens", mode = { "n" } },
 	{ "<leader>cd", vim.diagnostic.open_float, mode = "n", desc = "Line Diagnostics" },
-	{ "<leader>cs", "<cmd>AerialNavToggle<cr>", mode = "n", desc = "Aerial Navigation Toggle" },
-	{ "<leader>cS", "<cmd>AerialToggle<cr>", mode = "n", desc = "Aerial Toggle" },
 	{ "<leader>co", "<cmd>Lspsaga outline<cr>", mode = "n", desc = "Lsp Outline" },
 	{
 		"<leader>cn",
@@ -229,6 +144,7 @@ wk.add({
 
 	-- UI
 	{ "<leader>u", group = "ui", icon = { icon = "󰙵 ", color = "cyan" } },
+	{ "<leader>ug", "<cmd>IBLToggle<cr>", mode = "n", desc = "Toggle Indent Guides" },
 
 	-- Diagnostics / Quickfix
 	{ "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
@@ -279,6 +195,5 @@ wk.add({
 	{ "<leader>m", group = "Markdown", remap = false },
 	{ "<leader>mp", "<cmd>Glow<cr>", desc = "Markdown Preview", remap = false },
 	{ "<leader>ng", ":Neogen<cr>", desc = "Annotation Toolkit", remap = false },
-	{ "<leader>v", group = "Visualization of functions and args", remap = false },
-	{ "<leader>vs", "<cmd>Vista<cr>", desc = "Viewer & Finder for LSP symbols and tags", remap = false },
+	{ "<leader>v", group = "Symbols", remap = false },
 })

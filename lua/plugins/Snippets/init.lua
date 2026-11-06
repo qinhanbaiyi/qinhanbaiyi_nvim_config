@@ -1,74 +1,80 @@
+local filetypes = { "all", "r", "lua", "tex", "python", "rust", "markdown", "go" }
+
+local function load_snippets(ls)
+	local snippets = {}
+	for _, filetype in ipairs(filetypes) do
+		snippets[filetype] = require("plugins.Snippets.snippets." .. filetype)
+	end
+	for _, filetype in ipairs(filetypes) do
+		ls.add_snippets(filetype, snippets[filetype], { key = filetype })
+	end
+end
+
+local function reload_snippets()
+	for module in pairs(package.loaded) do
+		if type(module) == "string" and vim.startswith(module, "plugins.Snippets.") then
+			package.loaded[module] = nil
+		end
+	end
+	local ls = require("luasnip")
+	local ok, err = pcall(load_snippets, ls)
+	if ok then
+		ls.clean_invalidated()
+		vim.notify("LuaSnip snippets reloaded")
+	else
+		vim.notify(err, vim.log.levels.ERROR)
+	end
+end
+
 return {
-	-- Snippet
 	{
 		"L3MON4D3/LuaSnip",
-		-- follow latest release.
-		version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
-		-- install jsregexp (optional!).
+		version = "v2.*",
 		build = "make install_jsregexp",
-		event = { "InsertEnter" },
-		dependencies = {
-			"saadparwaiz1/cmp_luasnip",
-			"rafamadriz/friendly-snippets",
+		event = "InsertEnter",
+		keys = {
+			{ "<leader><leader>s", reload_snippets, desc = "Reload LuaSnip snippets" },
 		},
 		config = function()
 			local ls = require("luasnip")
-			-- <c-k> is my expansion key
-			-- this will expand the current item or jump to the next item within the snippet.
-			local keymap = vim.keymap.set
-			keymap({ "i", "s" }, "<c-k>", function()
-				if ls.expand_or_jumpable() then
-					ls.expand_or_jump()
-				end
-			end, { silent = true, noremap = true })
-
-			-- <c-j> is my jump backwards key.
-			-- this always moves to the previous item within the snippet
-			keymap({ "i", "s" }, "<c-j>", function()
-				if ls.jumpable(-1) then
-					ls.jump(-1)
-				end
-			end, { silent = true, noremap = true })
-
-			-- <c-l> is selecting within a list of options.
-			-- This is useful for choice nodes (introduced in the forthcoming episode 2)
-			keymap({ "i", "s" }, "<c-l>", function()
-				if ls.choice_active() then
-					ls.change_choice(1)
-				else
-					vim.api.nvim_feedkeys(require("cmp.utils.keymap").t("<right>"), "n", true)
-				end
-			end, { noremap = true, silent = true })
-
-			-- c()
-			keymap("i", "<c-u>", require("luasnip.extras.select_choice"), { silent = true, noremap = true })
-
-			-- shorcut to source my luasnips file again, which will reload my snippets
-			keymap(
-				"n",
-				"<leader><leader>s",
-				"<cmd>source ~/.config/nvim/lua.bak/luasnip_snippets/init.lua<CR>",
-				{ silent = true, noremap = true }
-			)
-
-			-- require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/lua/plugins/Snippets/snippets" })
-			-- require("luasnip").config.setup({ store_selection_keys = "<A-p>" })
-
-			-- vim.cmd([[command! LuaSnipEdit :lua require("luasnip.loaders.from_lua").edit_snippet_files()]])
-
 			local types = require("luasnip.util.types")
 			ls.config.set_config({
-				history = true, --keep around last snippet local to jump back
-				updateevents = "TextChanged,TextChangedI", --update changes as you type
+				history = true,
+				updateevents = "TextChanged,TextChangedI",
 				enable_autosnippets = true,
 				ext_opts = { [types.choiceNode] = { active = { virt_text = { { "●", "GruvboxOrange" } } } } },
 			})
-			local list = { "all", "r", "lua", "tex", "python", "rust", "markdown", "go" }
-			for _, lang in ipairs(list) do
-				local snippet = require("plugins.Snippets.snippets." .. lang)
-				ls.add_snippets(lang, snippet, { key = lang })
-			end
+			load_snippets(ls)
+
+			-- Keep the editor's cursor motions when there is no active snippet to navigate.
+			vim.keymap.set({ "i", "s" }, "<C-k>", function()
+				if ls.expand_or_jumpable() then
+					ls.expand_or_jump()
+				elseif vim.fn.mode() == "i" then
+					vim.api.nvim_feedkeys(vim.keycode("<Up>"), "n", false)
+				end
+			end, { silent = true, desc = "Expand snippet, jump forward or move up" })
+
+			vim.keymap.set({ "i", "s" }, "<C-j>", function()
+				if ls.jumpable(-1) then
+					ls.jump(-1)
+				elseif vim.fn.mode() == "i" then
+					vim.api.nvim_feedkeys(vim.keycode("<Down>"), "n", false)
+				end
+			end, { silent = true, desc = "Jump back in snippet or move down" })
+
+			vim.keymap.set({ "i", "s" }, "<C-l>", function()
+				if ls.choice_active() then
+					ls.change_choice(1)
+				else
+					vim.api.nvim_feedkeys(vim.keycode("<Right>"), "n", false)
+				end
+			end, { silent = true, desc = "Cycle snippet choice or move right" })
+
+			vim.keymap.set("i", "<C-u>", require("luasnip.extras.select_choice"), {
+				silent = true,
+				desc = "Select snippet choice",
+			})
 		end,
 	},
-	{ "rafamadriz/friendly-snippets" },
 }

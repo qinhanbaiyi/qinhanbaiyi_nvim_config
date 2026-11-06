@@ -5,7 +5,7 @@ return {
 		event = { "BufReadPre", "BufNewFile", "InsertEnter" },
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
-			"hrsh7th/nvim-cmp",
+			"saghen/blink.cmp",
 			{ "mason-org/mason.nvim", version = "v2.3.1", opts = {} },
 			{ "mason-org/mason-lspconfig.nvim", version = "v2.3.0" },
 		},
@@ -32,20 +32,11 @@ return {
 				end,
 			})
 
-			local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-			local has_blink, blink = pcall(require, "blink.cmp")
-			local capabilities = vim.tbl_deep_extend(
-				"force",
-				vim.lsp.protocol.make_client_capabilities(),
-				has_cmp and cmp_nvim_lsp.default_capabilities() or {},
-				has_blink and blink.get_lsp_capabilities() or {},
-				{
-					workspace = {
-						fileOperations = { didRename = true, willRename = true },
-					},
-				}
-			)
-			vim.lsp.config("*", { capabilities = capabilities })
+			vim.lsp.config("*", {
+				capabilities = require("blink.cmp").get_lsp_capabilities({
+					workspace = { fileOperations = { didRename = true, willRename = true } },
+				}),
+			})
 			vim.lsp.config("lua_ls", {
 				settings = {
 					Lua = {
@@ -69,7 +60,7 @@ return {
 				cmd = { "rust-analyzer" },
 			})
 			require("mason-lspconfig").setup({
-				ensure_installed = { "bashls", "vimls", "lua_ls", "rust_analyzer" },
+				ensure_installed = { "bashls", "vimls", "lua_ls", "rust_analyzer", "jsonls", "ruff" },
 				-- Keep Tombi available for manual use as before.
 				automatic_enable = { exclude = { "tombi" } },
 			})
@@ -113,9 +104,6 @@ return {
 			require("lsp_signature").setup(opts)
 		end,
 	},
-
-	-- 美化自动完成提示信息
-	{ "onsails/lspkind-nvim" },
 
 	-- -- highlight the word under the cursor
 	-- { "RRethy/vim-illuminate", opts = nil },

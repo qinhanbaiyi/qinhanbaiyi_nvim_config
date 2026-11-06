@@ -1,6 +1,13 @@
 return {
 	{
 		"stevearc/aerial.nvim",
+		version = "v4.0.0",
+		lazy = false,
+		keys = {
+			{ "<leader>cs", "<cmd>AerialNavToggle<cr>", desc = "Aerial Navigation Toggle" },
+			{ "<leader>cS", "<cmd>AerialToggle<cr>", desc = "Aerial Toggle" },
+			{ "<leader>vs", "<cmd>AerialToggle<cr>", mode = { "n", "v" }, desc = "Code Outline" },
+		},
 		opts = {
 			attach_mode = "global",
 			backends = { "lsp", "treesitter", "markdown", "man" },
