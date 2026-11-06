@@ -426,10 +426,8 @@ def run() -> None:
             health = "\n".join(nvim.current.buffer[:])
             checks["deprecated_health"] = health
             warnings = [line for line in health.splitlines() if "WARNING" in line]
-            assert not any(
-                "client." in line or "vim.lsp" in line for line in warnings
-            ), warnings
-            assert "vim.tbl_flatten" not in health, warnings
+            # 现在要求整个弃用检查为零警告，避免插件更新悄悄带回旧接口。
+            assert not warnings and "ERROR" not in health, health
             messages = nvim.command_output("messages")
             checks["messages"] = messages
             assert "position_encoding param is required" not in messages, messages

@@ -1,7 +1,7 @@
 -- 查找与搜索的键位集中在这里，保留启动加载及现有搜索排序行为。
 return {
 
-	-- Telescope and it's extensions
+	-- 搜索窗口与扩展。键位列表是统一入口，不在 Which-key 中重复定义。
 	{
 		"nvim-telescope/telescope.nvim",
 		lazy = false,
@@ -126,6 +126,7 @@ return {
 		tag = "v0.2.1",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = {
+			-- 保存扩展参数；fzf 未自动启用，继续保留原来的默认搜索排序。
 			extensions = {
 				fzf = {
 					fuzzy = true, -- false will only do exact matching

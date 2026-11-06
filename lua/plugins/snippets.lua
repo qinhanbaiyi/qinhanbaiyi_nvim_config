@@ -2,7 +2,8 @@
 return {
 	{
 		"L3MON4D3/LuaSnip",
-		version = "v2.*",
+		-- 固定已验证的稳定版，包含 Neovim 0.12 和新版 vim.validate 的兼容修复。
+		version = "v2.5.0",
 		build = "make install_jsregexp",
 		event = "InsertEnter",
 		keys = {
@@ -18,10 +19,14 @@ return {
 		config = function()
 			local ls = require("luasnip")
 			local types = require("luasnip.util.types")
-			-- 保留片段历史，并在文字变化时刷新依赖参数的函数/动态节点。
+			-- 以下四项等价于旧 history=true：记住已展开片段，允许向前/向后跨片段跳转。
+			-- update_events 同时覆盖普通编辑和插入模式，参数变化后刷新依赖的动态节点。
 			ls.config.set_config({
-				history = true,
-				updateevents = "TextChanged,TextChangedI",
+				keep_roots = true,
+				link_roots = true,
+				link_children = true,
+				exit_roots = false,
+				update_events = { "TextChanged", "TextChangedI" },
 				enable_autosnippets = true,
 				ext_opts = { [types.choiceNode] = { active = { virt_text = { { "●", "GruvboxOrange" } } } } },
 			})

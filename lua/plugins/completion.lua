@@ -35,7 +35,8 @@ return {
 		end,
 		opts = {
 			snippets = { preset = "luasnip" },
-			fuzzy = { implementation = "prefer_rust" },
+			fuzzy = { implementation = "prefer_rust" }, -- 优先 Rust 匹配器，缺失时仍能用 Lua 工作。
+			-- 不套用预设，避免升级新增按键抢占片段跳转或原编辑操作。
 			keymap = {
 				preset = "none",
 				-- 未主动选中候选时，回车继续换行；选中后才接受补全。
@@ -53,6 +54,7 @@ return {
 				["<C-f>"] = { "scroll_documentation_down", "fallback" },
 				["<C-e>"] = { "hide", "fallback" },
 			},
+			-- 保留边框、候选列与不预选的习惯；自动括号交给 mini.pairs。
 			completion = {
 				accept = { auto_brackets = { enabled = false } },
 				list = { selection = { preselect = false, auto_insert = false } },
@@ -69,6 +71,7 @@ return {
 				documentation = { auto_show = true, auto_show_delay_ms = 250, window = { border = "single" } },
 				ghost_text = { enabled = true, show_without_selection = true },
 			},
+			-- LSP、片段、路径始终参与；buffer 至少输入 4 个字符才给候选，减少噪声。
 			sources = {
 				default = { "lsp", "snippets", "path", "buffer" },
 				-- 仅 Lua 启用模块名补全，其他语言的候选来源和排序保持不变。

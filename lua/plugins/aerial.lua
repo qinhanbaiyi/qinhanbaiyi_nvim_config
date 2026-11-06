@@ -10,11 +10,11 @@ return {
 			{ "<leader>vs", "<cmd>AerialToggle<cr>", mode = { "n", "v" }, desc = "Code Outline" },
 		},
 		opts = {
-			attach_mode = "global",
+			attach_mode = "global", -- 切换缓冲区时复用同一个符号视图。
 			backends = { "lsp", "treesitter", "markdown", "man" },
 			show_guides = true,
 			layout = {
-				resize_to_content = false,
+				resize_to_content = false, -- 保持侧栏宽度稳定，避免符号长短导致布局跳动。
 				win_opts = {
 					winhl = "Normal:NormalFloat,FloatBorder:NormalFloat,SignColumn:SignColumnSB",
 					signcolumn = "yes",

@@ -17,11 +17,12 @@ return {
 		event = "BufWritePre",
 		cmd = { "Format", "Prettier", "ConformInfo" },
 		opts = {
+			-- 每种语言只从这里选择格式化器，避免保存时被多个插件重复处理。
 			formatters_by_ft = {
 				lua = { "stylua" },
 				python = { "black" },
-				rust = { "rustfmt", lsp_format = "fallback" },
-				javascript = { "prettierd", "prettier", stop_after_first = true },
+				rust = { "rustfmt", lsp_format = "fallback" }, -- 本地工具不可用时才回退 LSP。
+				javascript = { "prettierd", "prettier", stop_after_first = true }, -- 任选首个可用工具。
 				snakemake = { "snakefmt" },
 				yaml = { "yamlfmt" },
 				sh = { "shfmt" },

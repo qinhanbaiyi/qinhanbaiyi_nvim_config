@@ -10,6 +10,7 @@ return {
 		"MeanderingProgrammer/treesitter-modules.nvim",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		opts = {
+			-- 新增语言解析器时在此登记；使用当前 main API，不调用旧 configs.setup。
 			ensure_installed = {
 				"bash",
 				"bibtex",
@@ -40,6 +41,7 @@ return {
 			ignore_install = { "javascript" },
 			highlight = { enable = true, disable = { "c", "rust" } },
 			indent = { enable = true },
+			-- gnn 开始语法节点选区，回车扩大、退格缩小，仅在选区交互中生效。
 			incremental_selection = {
 				enable = true,
 				keymaps = {
@@ -84,6 +86,7 @@ return {
 				select.select_textobject("@local.scope", "locals")
 			end, { desc = "Select language scope" })
 
+			-- 交换的是语法树参数节点，保留逗号和函数结构。
 			local swap = require("nvim-treesitter-textobjects.swap")
 			vim.keymap.set("n", "<leader>a", function()
 				swap.swap_next("@parameter.inner")

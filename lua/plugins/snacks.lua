@@ -71,6 +71,7 @@ return {
 			dashboard = { enabled = false },
 			indent = { enabled = false },
 			input = { enabled = false },
+			-- 保留原生消息显示，避免升级后突然启用通知弹窗。
 			notifier = {
 				enabled = false,
 				timeout = 3000,
@@ -78,7 +79,7 @@ return {
 			quickfile = { enabled = true },
 			scroll = { enabled = false },
 			statuscolumn = { enabled = false },
-			words = { enabled = true },
+			words = { enabled = true }, -- 高亮当前符号引用，Alt-N/P 在普通模式跳转。
 			styles = {
 				notification = {
 					-- wo = { wrap = true } -- Wrap notifications

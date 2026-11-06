@@ -7,6 +7,7 @@ local ok, err = xpcall(function()
 	require("config.options")
 	require("config.keymaps")
 	require("config.autocmds")
+	require("config.markdown").setup()
 	require("config.lazy")
 end, debug.traceback)
 

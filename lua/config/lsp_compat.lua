@@ -1,5 +1,5 @@
--- 固定的 Lspsaga cf6fc94 仍有两处未适配新版 Neovim 的调用。
--- 只替换引用高亮和类型层级请求入口，不改全局 vim API、窗口、键位或实际 rename 流程。
+-- 固定的 Lspsaga cf6fc94 仍有旧客户端、字符编码及参数校验调用，局部适配见下方。
+-- 只适配引用高亮、类型层级和布局校验，不改全局 vim API、窗口、键位或实际 rename 流程。
 -- 上游修复后，升级 plugins/lsp.lua 的提交并通过 tests/lsp.py，可移除对应补丁。
 local M = {}
 
@@ -108,7 +108,27 @@ local function setup_typehierarchy()
 	end
 end
 
+-- Saga 布局模块仍使用旧表式 validate。只适配这两个方法，不改写 Neovim 全局函数。
+local function setup_layout()
+	local layout = require("lspsaga.layout")
+	function layout:setlines(lines)
+		vim.validate("lines", lines, "table")
+		-- 上游 LEFT=1、RIGHT=2，保持原有左右窗选择与链式返回。
+		local buf = self.current == 1 and self.left_bufnr or self.right_bufnr
+		vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+		return self
+	end
+	function layout:done(callback)
+		vim.validate("fn", callback, "function", true)
+		if callback then
+			callback(self.left_bufnr, self.left_winid, self.right_bufnr, self.right_winid)
+		end
+		return self.left_bufnr, self.left_winid, self.right_bufnr, self.right_winid
+	end
+end
+
 function M.setup()
+	setup_layout()
 	setup_rename()
 	setup_typehierarchy()
 end

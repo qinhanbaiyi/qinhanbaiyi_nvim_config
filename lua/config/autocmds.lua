@@ -14,6 +14,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	group = group,
+	-- 只覆盖 .smk，避免扩大到原先未改缩进的 Snakefile。
 	pattern = "*.smk",
 	desc = "Use four-space indentation in Snakemake files",
 	callback = function()

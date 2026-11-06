@@ -71,14 +71,19 @@ lua/
     autocmds.lua               # 通用事件与文件类型
     lazy.lua                   # 插件管理器引导和唯一插件入口
     lsp.lua                    # 服务器、诊断、原生 LSP 键位
-    lsp_compat.lua             # 有明确移除条件的上游兼容修复
+    lsp_compat.lua             # Lspsaga 公开方法的局部兼容修复
+    plugin_patches.lua         # 固定源码校验与内存补丁加载
+    compat/                    # ToggleTerm / Diffview 的版本专用补丁清单
+    ai.lua                     # 旧 AI 按键、命令与认证字段的兼容
+    markdown.lua               # 原生浮窗调用 Glow CLI
     which.lua                  # Which-key 菜单分组
   plugins/                     # 扁平、小写；只放 Lazy 插件声明
     lsp.lua                    # LSP 插件、版本、Lspsaga 键位
     completion.lua             # Blink 补全与候选列表
     snippets.lua               # LuaSnip 插件与跳转键
     formatting.lua             # Conform、保存格式化、手动命令
-    editor.lua                 # 编辑工具、Neo-tree、Codeium
+    editor.lua                 # 编辑工具、Neo-tree、mini.pairs/surround
+    ai.lua                     # NeoCodeium 插件版本与启用策略
     ui.lua                     # 主题、状态栏、标签栏、缩进线
     which-key.lua              # Which-key 加载与分组显示
     ...                        # Telescope、Git、Tree-sitter 等领域文件
@@ -86,8 +91,9 @@ lua/
     init.lua                   # 注册语言、加载和重载
     definitions/               # 每个文件对应一种语言的片段
     helpers/                   # 仅供片段使用的 AST 和字符串辅助函数
-scripts/check.sh                # 格式、加载、锁版本和键位回归
-tests/                         # 启动检查与真实 LuaLS 交互测试
+scripts/check.sh               # 格式、加载、锁版本和键位回归
+scripts/check-all.sh            # 完整 LSP、Git、编辑和 AI 本地回归
+tests/                         # 启动、片段和真实按键测试
 .editorconfig
 .stylua.toml
 lazy-lock.json
@@ -113,7 +119,7 @@ lazy-lock.json
 
 旧的大纲插件已迁移到 [outline.nvim](https://github.com/hedyhli/outline.nvim)，保留 `:SymbolsOutline`、`:SymbolsOutlineOpen` 和 `:SymbolsOutlineClose`，继续使用右侧大纲窗口。日常的 Aerial 和 Lspsaga 大纲键位保持不变。
 
-`config/lsp_compat.lua` 对锁定版本 Lspsaga 的重命名引用高亮与类型层级请求作局部修复，处理客户端方法、字符编码和过期异步响应，不修改 Neovim 全局 API，也不屏蔽警告。后续升级该插件时应核对上游是否已修复，再删除对应兼容代码。
+`config/lsp_compat.lua` 对锁定版本 Lspsaga 的重命名引用高亮、类型层级请求与布局校验作局部修复，处理客户端方法、字符编码、过期异步响应和新版 validate 签名，不修改 Neovim 全局 API，也不屏蔽警告。后续升级该插件时应核对上游是否已修复，再删除对应兼容代码。
 
 ## 检查与维护
 
@@ -122,11 +128,39 @@ lazy-lock.json
 ```sh
 cd ~/.config/nvim
 bash scripts/check.sh
-uv run --no-project --with pynvim==0.6.0 python tests/lsp.py
+bash scripts/check-all.sh
 ```
 
-第一条需要 PATH 中的 `nvim` 和 `stylua`，检查 Lua 格式、插件 checkout 与锁文件、常用快捷键、主题和片段重复加载。第二条使用临时 Lua 项目验证真实 LuaLS 连接、Lazydev 类型库和补全、Lspsaga 窗口、旧大纲命令、自动签名提示及 LSP 弃用日志，需要已安装 `lua_ls`。取消重命名、迟到响应等边界通过受控请求检查；LuaLS 不提供类型层级功能，该分支使用协议替身验证编码和结果选择，不能代替具体语言服务器的完整测试。
+第一条需要 PATH 中的 `nvim` 和 `stylua`，检查格式、插件锁版本、常用快捷键、主题，以及 44 个片段的展开、跳转、历史和重载。完整检查还需要 `uv`、Git、Glow 和 Mason 已安装的 `lua_ls`，使用 `pynvim==0.6.0` 运行以下场景。
 
-测试继承 `XDG_CONFIG_HOME`、`XDG_DATA_HOME`，也可用 `NVIM_BIN` 指定 Neovim。测试关闭 Codeium，避免把测试片段发送给外部 AI；不改写用户项目文件。
+| 测试 | 覆盖 |
+| --- | --- |
+| `tests/lsp.py` | 真实 LuaLS、Lazydev 补全、Saga 窗口、重命名、签名和大纲 |
+| `tests/git.py` | 临时 Git 仓库中的导航、暂存、撤销、还原、blame、diff 与缩进线 |
+| `tests/deferred.py` | 按需打开终端、状态栏刷新、仓库差异与文件历史 |
+| `tests/tooling.lua` | 调试依赖导入、异步任务与调试参数校验，不启动调试会话 |
+| `tests/editor.py` | 自动括号、包围符、原生注释、Glow 内容与关闭竞态、Saga 布局 |
+| `tests/ai.py` | 本地合成候选的接受、循环、清空和原按键回退，不调用云端 |
 
-日常排查使用 `:checkhealth vim.lsp`、`:checkhealth vim.deprecated`、`:ConformInfo` 和 `:messages`。本次针对 LSP 接口进行了兼容修复；部分未更新插件仍可能报告通用的 `vim.validate{...}` 弃用提示，检查不会将其隐藏。
+测试继承 `XDG_CONFIG_HOME`、`XDG_DATA_HOME`，也可用 `NVIM_BIN` 指定 Neovim。所有常规检查通过旧 `g:codeium_enabled` 开关关闭 AI 网络请求，不改写用户项目文件。类型层级与迟到响应使用受控请求覆盖边界，不能代替具体语言服务器的完整验证。
+
+### 插件维护与替换记录
+
+2026-11-07 核对当时启用的 52 个仓库，归档状态以 GitHub 仓库元数据为准。
+
+| 原依赖 | 当前处理 | 保留的习惯 |
+| --- | --- | --- |
+| 已归档的 [Codeium/Windsurf Vim 插件](https://github.com/Exafunction/windsurf.vim) | [NeoCodeium](https://github.com/monkoose/neocodeium) | Ctrl-G 接受，Alt-n/Alt-N 循环，Ctrl-X 清空，以及旧命令和备用键 |
+| 已归档的 [glow.nvim](https://github.com/ellisonleao/glow.nvim) | Neovim 原生浮窗 + 现有 [Glow CLI](https://github.com/charmbracelet/glow) | `:Glow`、`<leader>mp`、q/Esc 关闭，支持未保存文本 |
+| 未启用 setup 的 Comment.nvim | 清理重复依赖，继续使用 Neovim 原生注释 | 原有 gc/gcc；不凭空增加 gb 操作 |
+| 旧 mini.pairs / mini.surround 仓库地址 | 改用维护组织 `nvim-mini/*` 的固定稳定版 | 原有括号及 gs* 键；显式补回上游取消注册的 gsn |
+
+Gitsigns、IBL、LuaSnip 和 mini.pairs 使用已修复 `vim.validate` 的上游版本。Lspsaga 尚未修复的两个布局方法由局部兼容代码适配，没有改写全局 `vim.validate` 或隐藏警告。测试要求 `:checkhealth vim.deprecated` 不出现警告。
+
+ToggleTerm 和 Diffview 的固定版本仍有上游未修复的校验。兼容清单明确列出旧/新源码，加载器核对原文件 SHA256 和片段唯一性后，只在内存中将其改为现代参数校验调用。插件 checkout 保持干净，`:Lazy restore` 后仍可重现；全局 API 与告警机制保持原样。升级这两个插件时，需要同时重新审查清单，源码不符会明确报错，避免悄悄套用过期补丁。
+
+Gitsigns 的旧 `toggle_deleted` 接口已经失效，`<leader>td` 现在打开/关闭当前文件的统一差异视图以查看删除行。`<leader>hu` 继续撤销最近一次暂存，不改成“反向暂存光标处的 hunk”。新版 surround 的查找操作额外支持可视和操作符模式，原有普通模式操作不变。
+
+NeoCodeium 复用 `~/.codeium/config.json`。旧 `apiKey` 字段只在内存中适配为新插件需要的格式，不把认证数据写入仓库。新环境使用 `:NeoCodeium auth`，默认服务二进制由插件管理；本地服务路径可通过 `vim.g.neocodeium_bin` 指定。首次迁移实测旧账号认证、服务连接和合成请求响应正常，但该请求返回空候选，因此云端生成效果仍以实际使用为准。
+
+日常排查使用 `:checkhealth vim.lsp`、`:checkhealth vim.deprecated`、`:ConformInfo` 和 `:messages`。已有配置的模块职责、关键选项、延迟加载原因和兼容边界均写在对应代码注释中。

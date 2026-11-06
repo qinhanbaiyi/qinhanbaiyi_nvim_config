@@ -1,6 +1,7 @@
 -- 不依赖插件的全局快捷键。插件操作由各自的 keys 字段注册。
 local map = vim.keymap.set
 
+-- Leader 先占位，避免等待后执行空格默认移动；Ctrl-S 在四种模式共用保存入口。
 map("n", "<Space>", "<Nop>", { silent = true })
 map("s", "<C-u>", "<Nop>", { silent = true })
 map("s", "<C-i>", "<Nop>", { silent = true })
@@ -24,6 +25,7 @@ map("i", "<C-k>", "<Up>", { silent = true })
 map("i", "<C-l>", "<Right>", { silent = true })
 
 -- 窗口、移行和 Quickfix 属于编辑器本身，不依赖插件。
+-- 表中的 mode/remap 属于真实映射选项，Which-key 只读取 desc 生成提示。
 for _, entry in ipairs({
 	{ "[q", "<cmd>cprev<CR>", desc = "Previous Quickfix", mode = "n", silent = true },
 	{ "]q", "<cmd>cnext<CR>", desc = "Next Quickfix", mode = "n", silent = true },
