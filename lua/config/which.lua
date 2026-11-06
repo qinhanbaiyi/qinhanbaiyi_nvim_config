@@ -15,53 +15,59 @@ local wk = require("which-key")
 
 -- diagnostic
 local diagnostic_goto = function(next, severity)
-	local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
 	severity = severity and vim.diagnostic.severity[severity] or nil
 	return function()
-		go({ severity = severity })
+		vim.diagnostic.jump({
+			count = next and 1 or -1,
+			severity = severity,
+			on_jump = function(_, bufnr)
+				vim.diagnostic.open_float({ bufnr = bufnr, scope = "cursor", focus = false })
+			end,
+		})
 	end
 end
 
--- sniprun treesitter node select for executing
-local treesitter_node_select = function()
-	local ts_utils = require("nvim-treesitter.ts_utils")
-	local bufnr = vim.api.nvim_get_current_buf()
-	local cursor_node = ts_utils.get_node_at_cursor()
-
-	local exp_state_node
-
-	-- while ts_utils.is_parent(cursor_node) do
-	while
-		string.find(cursor_node:type(), "statement") == nil
-		-- cursor_node:type() ~= "expression_statement"
-		and cursor_node:parent() ~= nil
-		and cursor_node:type() ~= "function_definition"
-	do
-		-- cursor_node = ts_utils.get_previous_node(cursor_node)
-		cursor_node = cursor_node:parent()
+-- SnipRun executes a line range. In normal mode use the containing statement.
+local function sniprun_range()
+	local line = vim.api.nvim_win_get_cursor(0)[1]
+	if vim.fn.mode():find("[vV\22]") then
+		local anchor = vim.fn.line("v")
+		vim.cmd.normal({ args = { vim.keycode("<Esc>") }, bang = true })
+		return math.min(anchor, line), math.max(anchor, line)
 	end
 
-	ts_utils.update_selection(bufnr, cursor_node)
+	local parser = vim.treesitter.get_parser(0)
+	if not parser then
+		return line, line
+	end
+	parser:parse()
+	local node = vim.treesitter.get_node()
+	if not node then
+		return line, line
+	end
+	while not node:type():find("statement", 1, true) and node:type() ~= "function_definition" do
+		local parent = node:parent()
+		if not parent or not parent:parent() then
+			break
+		end
+		node = parent
+	end
 
-	-- for _, node in ipairs(scope) do
-	-- 	if node:type() == "expression_statement" then
-	-- 		exp_state_node = node
-	-- 		break
-	-- 	end
-	-- end
-	-- print(exp_state_node)
-	-- ts_utils.update_selection(bufnr, exp_state_node)
+	local start_row, _, end_row, end_col = node:range()
+	if end_col == 0 and end_row > start_row then
+		end_row = end_row - 1
+	end
+	return start_row + 1, end_row + 1
 end
 
--- sniprun
-local execute_sniprun = function()
-	local bufnr = vim.api.nvim_get_current_buf()
-	local total_lines = vim.api.nvim_buf_line_count(bufnr)
-	local linenr = vim.api.nvim_win_get_cursor(0)[1]
-	if linenr == total_lines then
-		vim.api.nvim_win_set_cursor(0, { linenr, 0 })
+local function execute_sniprun()
+	local first, last = sniprun_range()
+	require("sniprun.api").run_range(first, last)
+	local total_lines = vim.api.nvim_buf_line_count(0)
+	if last >= total_lines then
+		vim.api.nvim_win_set_cursor(0, { total_lines, 0 })
 	else
-		vim.api.nvim_win_set_cursor(0, { linenr + 1, 9999 })
+		vim.api.nvim_win_set_cursor(0, { last + 1, 9999 })
 	end
 end
 
@@ -71,14 +77,14 @@ wk.add({
 	{ "[", group = "prev" },
 	{ "[b", "<cmd>BufferPrevious<CR>", mode = "n", desc = "Previous Buffer" },
 	{ "[q", "<cmd>cprev<CR>", desc = "Previous Quickfix", mode = "n" },
-	{ "[d", "<cmd>Lspsaga diagnostic_jump_prev", mode = "n", desc = "Prev Diagnostic" },
+	{ "[d", "<cmd>Lspsaga diagnostic_jump_prev<cr>", mode = "n", desc = "Prev Diagnostic" },
 	{ "[e", diagnostic_goto(false, "ERROR"), mode = "n", desc = "Prev Error" },
 	{ "[w", diagnostic_goto(false, "WARN"), mode = "n", desc = "Prev Warning" },
 	-- Next
 	{ "]", group = "next" },
 	{ "]b", "<cmd>BufferNext<CR>", mode = "n", desc = "Next Buffer" },
 	{ "]q", "<cmd>cnext<CR>", desc = "Next Quickfix", mode = "n" },
-	{ "]d", "<cmd>Lspsaga diagnostic_jump_next", mode = "n", desc = "Next Diagnostic" },
+	{ "]d", "<cmd>Lspsaga diagnostic_jump_next<cr>", mode = "n", desc = "Next Diagnostic" },
 	{ "]e", diagnostic_goto(true, "ERROR"), mode = "n", desc = "Next Error" },
 	{ "]w", diagnostic_goto(true, "WARN"), mode = "n", desc = "Next Warning" },
 
@@ -106,12 +112,7 @@ wk.add({
 
 	{
 		"\\",
-		function()
-			-- use treesitter to get the current expression statement
-			treesitter_node_select()
-			require("sniprun").run("v")
-			execute_sniprun()
-		end,
+		execute_sniprun,
 		mode = { "n", "v" },
 		desc = "SnipRun",
 	},
@@ -180,10 +181,10 @@ wk.add({
 	{ "<leader>c", group = "Code" },
 	{ "<leader>cr", "<cmd>Lspsaga rename<cr>", desc = "Rename", remap = false },
 	{ "<leader>cf", "<cmd>lua vim.lsp.buf.format {async = true}<CR>", desc = "LSP Format", remap = false },
-	{ "<leader>cl", "<cmd>LspInfo<cr>", desc = "LspInfo", remap = false },
+	{ "<leader>cl", "<cmd>checkhealth vim.lsp<cr>", desc = "LspInfo", remap = false },
 	{ "<leader>ca", "<cmd>Lspsaga code_action<CR>", desc = "Code Action", remap = false },
 	{ "<leader>cc", vim.lsp.codelens.run, desc = "Run Codelens", mode = { "n", "v" } },
-	{ "<leader>cC", vim.lsp.codelens.refresh, desc = "Refresh & Display Codelens", mode = { "n" } },
+	{ "<leader>cC", function() vim.lsp.codelens.enable(true, { bufnr = 0 }) end, desc = "Refresh & Display Codelens", mode = { "n" } },
 	{ "<leader>cd", vim.diagnostic.open_float, mode = "n", desc = "Line Diagnostics" },
 	{ "<leader>cs", "<cmd>AerialNavToggle<cr>", mode = "n", desc = "Aerial Navigation Toggle" },
 	{ "<leader>cS", "<cmd>AerialToggle<cr>", mode = "n", desc = "Aerial Toggle" },

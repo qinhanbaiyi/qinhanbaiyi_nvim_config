@@ -16,9 +16,6 @@ local lambda = require("luasnip.extras").l
 local postfix = require("luasnip.extras.postfix").postfix
 
 local lua_ts_utils = require("plugins.Snippets.utils.ts_utils")
-local ts_query = vim.treesitter.query
-local ts_utils = require("nvim-treesitter.ts_utils")
-local ts_locals = require("nvim-treesitter.locals")
 
 local M = {}
 
@@ -85,37 +82,21 @@ function M:get_space_str(number_of_spaces)
 end
 
 function M:get_current_func_doc_comment_snip()
-	local lang = "lua"
-	lua_ts_utils.refresh_syntax_tree(lang)
-	local function_node = lua_ts_utils.get_current_func_node()
-	if not function_node then
+	local function_node = lua_ts_utils.get_current_func_node("lua")
+	local parameters = function_node and function_node:field("parameters")[1]
+	if not parameters then
 		return sn(nil, t(""))
 	end
-	local query = vim.treesitter.query.parse_query(
-		"lua",
-		[[  
-(function_declaration
-(parameters
-(identifier) @params
-))
-(function_definition
-(parameters
-(identifier) @params
-))
-	]]
-	)
 	local comment_lines = { "\n" }
 	local snip_nodes = {}
-	local index = 1
-	for _, matches, _ in query:iter_matches(function_node, 0) do
-		local param_node = matches[1]
-		table.insert(comment_lines, string.format("-- @param {{ {} }} %s {}", ts_query.get_node_text(param_node, 0)))
-		table.insert(snip_nodes, i(index, "any"))
-		table.insert(snip_nodes, i(index + 1))
-
-		index = index + 2
+	for node in parameters:iter_children() do
+		if node:type() == "identifier" then
+			local name = vim.treesitter.get_node_text(node, 0)
+			table.insert(comment_lines, string.format("-- @param {{ {} }} %s {}", name))
+			table.insert(snip_nodes, i(#snip_nodes + 1, "any"))
+			table.insert(snip_nodes, i(#snip_nodes + 1))
+		end
 	end
-	-- if there are no param in the function, return nothing if #snip_nodes < 1 then
 	if #snip_nodes < 1 then
 		return sn(nil, t(""))
 	end

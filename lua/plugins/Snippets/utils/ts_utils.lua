@@ -1,34 +1,20 @@
-local ts_utils = require("nvim-treesitter.ts_utils")
-local ts_locals = require("nvim-treesitter.locals")
+local M = {}
 
-local Utils = {}
-
--- parse_syntax_tree parse the syntax for the current changes
-function Utils.refresh_syntax_tree(lang)
-	local language_tree = vim.treesitter.get_parser(0, lang)
-	language_tree:parse()
-end
-
--- get_current_func_node returns the function node at current cursor point
-function Utils.get_current_func_node()
-	local cursor_node = ts_utils.get_node_at_cursor()
-	local scope = ts_locals.get_scope_tree(cursor_node, 0)
-
-	local function_node
-
-	for _, node in ipairs(scope) do
-		if node:type() == "function_definition" or node:type() == "function_declaration" then
-			function_node = node
-			break
-		end
+function M.get_current_func_node(lang)
+	local parser = vim.treesitter.get_parser(0, lang)
+	if not parser then
+		return nil
 	end
-
-	return function_node
+	local trees = parser:parse()
+	local cursor = vim.api.nvim_win_get_cursor(0)
+	local row, col = cursor[1] - 1, cursor[2]
+	local node = trees[1] and trees[1]:root():named_descendant_for_range(row, col, row, col)
+	while node do
+		if node:type() == "function_definition" or node:type() == "function_declaration" then
+			return node
+		end
+		node = node:parent()
+	end
 end
 
-function demo(a, b, c)
-	--
-end
-
-local demo = function(w, a) end
-return Utils
+return M
