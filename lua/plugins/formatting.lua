@@ -1,3 +1,6 @@
+-- 所有外部格式化统一交给 Conform，LSP 单独格式化仍由 <leader>cf 触发。
+-- Ex 命令的行号从 1 开始；把可选选区换算为 Conform 的首尾行列范围。
+-- 未指定 formatters 时使用当前文件类型规则，显式参数可临时覆盖。
 local function format_command(args, formatters)
 	local opts = { async = true, formatters = formatters }
 	if args.range > 0 then
@@ -10,6 +13,7 @@ end
 return {
 	{
 		"stevearc/conform.nvim",
+		keys = { { "<leader>f", ":Format<cr>", desc = "Format File", silent = true } },
 		event = "BufWritePre",
 		cmd = { "Format", "Prettier", "ConformInfo" },
 		opts = {
@@ -26,7 +30,7 @@ return {
 				shfmt = { args = { "-i", "2" } },
 			},
 			format_on_save = function(bufnr)
-				-- Shell files were formatted only on request with :Format.
+				-- Shell 保持仅手动格式化，其余已配置类型沿用保存格式化。
 				if vim.bo[bufnr].filetype ~= "sh" then
 					return { bufnr = bufnr }
 				end

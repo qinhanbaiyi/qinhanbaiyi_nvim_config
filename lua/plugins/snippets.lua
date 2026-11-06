@@ -1,31 +1,4 @@
-local filetypes = { "all", "r", "lua", "tex", "python", "rust", "markdown", "go" }
-
-local function load_snippets(ls)
-	local snippets = {}
-	for _, filetype in ipairs(filetypes) do
-		snippets[filetype] = require("plugins.Snippets.snippets." .. filetype)
-	end
-	for _, filetype in ipairs(filetypes) do
-		ls.add_snippets(filetype, snippets[filetype], { key = filetype })
-	end
-end
-
-local function reload_snippets()
-	for module in pairs(package.loaded) do
-		if type(module) == "string" and vim.startswith(module, "plugins.Snippets.") then
-			package.loaded[module] = nil
-		end
-	end
-	local ls = require("luasnip")
-	local ok, err = pcall(load_snippets, ls)
-	if ok then
-		ls.clean_invalidated()
-		vim.notify("LuaSnip snippets reloaded")
-	else
-		vim.notify(err, vim.log.levels.ERROR)
-	end
-end
-
+-- LuaSnip 的加载入口与交互设置。自定义片段位于 lua/snippets/，不混入插件声明目录。
 return {
 	{
 		"L3MON4D3/LuaSnip",
@@ -33,20 +6,28 @@ return {
 		build = "make install_jsregexp",
 		event = "InsertEnter",
 		keys = {
-			{ "<leader><leader>s", reload_snippets, desc = "Reload LuaSnip snippets" },
+			{
+				"<leader><leader>s",
+				function()
+					require("snippets").reload()
+				end,
+				desc = "Reload LuaSnip snippets",
+			},
 		},
+		-- 插件层只管理运行选项和按键；语言内容由 snippets 模块统一注册。
 		config = function()
 			local ls = require("luasnip")
 			local types = require("luasnip.util.types")
+			-- 保留片段历史，并在文字变化时刷新依赖参数的函数/动态节点。
 			ls.config.set_config({
 				history = true,
 				updateevents = "TextChanged,TextChangedI",
 				enable_autosnippets = true,
 				ext_opts = { [types.choiceNode] = { active = { virt_text = { { "●", "GruvboxOrange" } } } } },
 			})
-			load_snippets(ls)
+			require("snippets").load()
 
-			-- Keep the editor's cursor motions when there is no active snippet to navigate.
+			-- 有活动片段时跳转占位符，否则保留原来的光标移动。
 			vim.keymap.set({ "i", "s" }, "<C-k>", function()
 				if ls.expand_or_jumpable() then
 					ls.expand_or_jump()
@@ -71,6 +52,7 @@ return {
 				end
 			end, { silent = true, desc = "Cycle snippet choice or move right" })
 
+			-- C-l 循环当前候选，C-u 打开完整选择列表。
 			vim.keymap.set("i", "<C-u>", require("luasnip.extras.select_choice"), {
 				silent = true,
 				desc = "Select snippet choice",

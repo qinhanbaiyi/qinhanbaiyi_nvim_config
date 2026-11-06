@@ -1,3 +1,4 @@
+-- 调试与测试工具的插件入口，Lua 开发类型库由 plugins/lsp.lua 的 Lazydev 负责。
 return {
 	-- Code Debug
 	{ "mfussenegger/nvim-dap" },
@@ -14,7 +15,4 @@ return {
 			"antoinemadec/FixCursorHold.nvim",
 		},
 	},
-
-	-- develop
-	{ "folke/neodev.nvim", ft = "lua" },
 }

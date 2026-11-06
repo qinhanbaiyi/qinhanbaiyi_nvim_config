@@ -1,19 +1,11 @@
+-- 所有文件类型共用的日期、元信息与示例片段；注释形式取自当前缓冲区的 commentstring。
 local ls = require("luasnip")
 local s = ls.snippet
-local sn = ls.snippet_node
-local isn = ls.indent_snippet_node
 local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
-local c = ls.choice_node
-local d = ls.dynamic_node
-local r = ls.restore_node
-local events = require("luasnip.util.events")
-local ai = require("luasnip.nodes.absolute_indexer")
-local types = require("luasnip.util.types")
 
-local all = {}
-all = {
+return {
 	s({ trig = "data" }, {
 		f(function()
 			return string.format(string.gsub(vim.bo.commentstring, "%%s", "%%s"), os.date())
@@ -73,4 +65,3 @@ all = {
 		i(3, "Description"),
 	}),
 }
-return all

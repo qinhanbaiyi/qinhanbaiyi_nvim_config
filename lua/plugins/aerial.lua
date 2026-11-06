@@ -1,3 +1,4 @@
+-- Aerial 提供符号导航和左侧大纲，后端依次尝试 LSP、Tree-sitter 与文档解析。
 return {
 	{
 		"stevearc/aerial.nvim",

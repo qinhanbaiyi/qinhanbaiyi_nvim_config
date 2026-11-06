@@ -1,9 +1,28 @@
+-- 日常编辑工具按功能集中声明，插件专属键位与其配置放在一起。
 return {
 	-- Neogen - Your Annotation Toolkit
 	{
 		"danymat/neogen",
 		cmd = "Neogen",
-		keys = {},
+		keys = {
+			{
+				"<leader>cn",
+				function()
+					require("neogen").generate()
+				end,
+				desc = "Generate Annotations (Neogen)",
+				mode = { "n", "v" },
+				silent = true,
+			},
+			{
+				"<leader>ng",
+				":Neogen<cr>",
+				desc = "Annotation Toolkit",
+				remap = false,
+				mode = { "n", "v" },
+				silent = true,
+			},
+		},
 		opts = function(_, opts)
 			if opts.snippet_engine ~= nil then
 				return
@@ -20,13 +39,22 @@ return {
 	-- Neo tree
 	{
 		"nvim-neo-tree/neo-tree.nvim",
+		keys = {
+			{
+				"<leader>e",
+				"<cmd>Neotree toggle<cr>",
+				desc = "Neo-Tree",
+				remap = false,
+				mode = { "n", "v" },
+				silent = true,
+			},
+		},
 		event = "VimEnter",
 		branch = "v3.x",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
 			"MunifTanjim/nui.nvim",
-			-- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
 		},
 	},
 

@@ -1,3 +1,4 @@
+-- 解析器、语法高亮、增量选区与文本对象集中配置，新增语言先检查解析器列表。
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
@@ -10,10 +11,31 @@ return {
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		opts = {
 			ensure_installed = {
-				"bash", "bibtex", "c", "cpp", "css", "diff", "go", "html", "json",
-				"latex", "lua", "markdown", "markdown_inline", "python", "query",
-				"r", "regex", "rust", "snakemake", "toml", "vim", "vimdoc", "yaml",
+				"bash",
+				"bibtex",
+				"c",
+				"cpp",
+				"css",
+				"diff",
+				"go",
+				"html",
+				"json",
+				"latex",
+				"lua",
+				"markdown",
+				"markdown_inline",
+				"python",
+				"query",
+				"r",
+				"regex",
+				"rust",
+				"snakemake",
+				"toml",
+				"vim",
+				"vimdoc",
+				"yaml",
 			},
+			-- 保留原来的语言例外：不自动安装 JavaScript，C/Rust 不启用语法树高亮。
 			auto_install = true,
 			ignore_install = { "javascript" },
 			highlight = { enable = true, disable = { "c", "rust" } },
@@ -71,6 +93,7 @@ return {
 			end, { desc = "Swap with previous parameter" })
 
 			local move = require("nvim-treesitter-textobjects.move")
+			-- 普通 Git 缓冲区的 [c / ]c 会被 Gitsigns 局部映射接管；可视模式仍跳转类。
 			local movements = {
 				goto_next_start = { "]f", "]c", "]a" },
 				goto_next_end = { "]F", "]C", "]A" },

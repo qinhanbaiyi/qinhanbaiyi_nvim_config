@@ -1,3 +1,7 @@
+-- 通用编辑事件使用独立 augroup，避免重新加载后重复注册。
+-- 文件类型声明与具体 LSP 插件解耦。
+vim.filetype.add({ extension = { org = "org" } })
+
 local group = vim.api.nvim_create_augroup("UserEditing", { clear = true })
 
 vim.api.nvim_create_autocmd("TextYankPost", {

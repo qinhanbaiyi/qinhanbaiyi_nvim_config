@@ -1,3 +1,4 @@
+-- 诊断和 Quickfix 视图使用 <leader>x 前缀，避免占用 Aerial 的符号导航键。
 return {
 	{
 		"folke/trouble.nvim",

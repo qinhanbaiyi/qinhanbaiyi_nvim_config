@@ -1,3 +1,4 @@
+-- Git 符号与 hunk 操作。缓冲区连接 Git 后才注册局部键位，避免影响普通文件。
 return {
 	-- Git
 	{
@@ -44,7 +45,7 @@ return {
 					vim.keymap.set(mode, l, r, opts)
 				end
 
-				-- Navigation
+				-- Diff 窗口保留 Vim 原生跳转，普通 Git 缓冲区跳转 hunk。
 				map("n", "]c", function()
 					if vim.wo.diff then
 						return "]c"
@@ -65,7 +66,7 @@ return {
 					return "<Ignore>"
 				end, { expr = true })
 
-				-- Actions
+				-- 暂存、还原和预览仅绑定到当前 Git 缓冲区。
 				map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<CR>")
 				map({ "n", "v" }, "<leader>hr", ":Gitsigns reset_hunk<CR>")
 				map("n", "<leader>hS", gs.stage_buffer)

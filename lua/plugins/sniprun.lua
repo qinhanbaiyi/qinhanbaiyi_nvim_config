@@ -1,4 +1,7 @@
--- SnipRun executes a line range. In normal mode use the containing statement.
+-- 执行当前语句或可视选区，并把光标推进到下一段，保持交互式执行习惯。
+-- 返回从 1 开始的闭区间行号。普通模式向上查找语句，选区模式使用实际范围。
+---@return integer first_line
+---@return integer last_line
 local function sniprun_range()
 	local line = vim.api.nvim_win_get_cursor(0)[1]
 	if vim.fn.mode():find("[vV\22]") then
@@ -25,13 +28,14 @@ local function sniprun_range()
 	end
 
 	local start_row, _, end_row, end_col = node:range()
-	-- A range ending at column zero excludes that final line.
+	-- Tree-sitter 的结束位置为开区间，末列为 0 时不包含最后一行。
 	if end_col == 0 and end_row > start_row then
 		end_row = end_row - 1
 	end
 	return start_row + 1, end_row + 1
 end
 
+-- 提交执行请求后移动到下一行，文件末尾则停在最后一行。
 local function execute_sniprun()
 	local first, last = sniprun_range()
 	require("sniprun.api").run_range(first, last)
@@ -60,9 +64,6 @@ return {
 			require("sniprun").setup({
 				selected_interpreters = { "Python3_fifo" },
 				repl_enable = { "Python3_fifo" },
-				-- display = {
-				-- 	"Classic",
-				-- },
 				display = { "Terminal" },
 				display_options = {
 					terminal_scrollback = vim.o.scrollback, -- change terminal display scrollback lines
@@ -72,13 +73,6 @@ return {
 					terminal_width = 45, --# change the terminal display option width (if vertical)
 					terminal_height = 20, --# change the terminal display option height (if horizontal)
 				},
-				-- selected_interpreters = { "Python3_jupyter" },
-				-- interpreter_options = {
-				-- 	Python3_original = {
-				-- 		interpreter = "python3.9",
-				-- 		-- venv = { "venv_project1", "venv_project2", "../venv_project2" },
-				-- 	},
-				-- },
 			})
 		end,
 	},

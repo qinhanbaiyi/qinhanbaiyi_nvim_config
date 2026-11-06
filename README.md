@@ -29,7 +29,12 @@ nvim
 | `<leader>ff` / `<leader>sg` | 查找文件 / 全文搜索 |
 | `<leader>e` | 打开或关闭 Neo-tree |
 | `<leader>cs` / `<leader>vs` | Aerial 符号导航 / 代码大纲 |
-| `<leader>cl` | 查看 LSP 健康检查 |
+| `gd` / `gD` | 预览定义 / 跳转定义 |
+| `gr` / `gI` / `gy` | 查找引用 / 实现 / 类型定义 |
+| `gh` / `gH` | 悬浮文档 / 函数签名 |
+| `<leader>cr` / `<leader>ca` | 重命名 / 代码操作 |
+| `[d` / `]d` | 上一条 / 下一条诊断 |
+| `<leader>co` / `<leader>cl` | Lspsaga 大纲 / LSP 健康检查 |
 | `<leader>xs` / `<leader>xl` | Trouble 的符号 / LSP 视图 |
 | `<leader>mp` | Markdown 浮窗预览 |
 | `<leader><leader>s` | 重新加载当前配置的 LuaSnip 片段 |
@@ -57,7 +62,71 @@ nvim
 
 ## 配置结构
 
-- `init.lua` 定义 leader 和模块加载顺序。
-- `lua/config/` 放基础选项、全局事件、基础键位、Which-key 和 Lazy 引导。
-- `lua/plugins/` 按功能管理插件及其专用键位。
-- `lua/plugins/Snippets/snippets/` 放各语言的自定义 LuaSnip 片段。
+```text
+init.lua                       # leader 与启动顺序
+lua/
+  config/
+    options.lua                # Neovim 基础选项
+    keymaps.lua                # 编辑、窗口、Quickfix 等原生快捷键
+    autocmds.lua               # 通用事件与文件类型
+    lazy.lua                   # 插件管理器引导和唯一插件入口
+    lsp.lua                    # 服务器、诊断、原生 LSP 键位
+    lsp_compat.lua             # 有明确移除条件的上游兼容修复
+    which.lua                  # Which-key 菜单分组
+  plugins/                     # 扁平、小写；只放 Lazy 插件声明
+    lsp.lua                    # LSP 插件、版本、Lspsaga 键位
+    completion.lua             # Blink 补全与候选列表
+    snippets.lua               # LuaSnip 插件与跳转键
+    formatting.lua             # Conform、保存格式化、手动命令
+    editor.lua                 # 编辑工具、Neo-tree、Codeium
+    ui.lua                     # 主题、状态栏、标签栏、缩进线
+    which-key.lua              # Which-key 加载与分组显示
+    ...                        # Telescope、Git、Tree-sitter 等领域文件
+  snippets/
+    init.lua                   # 注册语言、加载和重载
+    definitions/               # 每个文件对应一种语言的片段
+    helpers/                   # 仅供片段使用的 AST 和字符串辅助函数
+scripts/check.sh                # 格式、加载、锁版本和键位回归
+tests/                         # 启动检查与真实 LuaLS 交互测试
+.editorconfig
+.stylua.toml
+lazy-lock.json
+```
+
+`lua/plugins/` 中每个模块返回插件声明。与插件相关的选项、依赖、命令和快捷键放在同一处；通用编辑操作放在 `config/keymaps.lua`，Which-key 只负责显示菜单分组。使用多个事件的模块创建有名称的 augroup，避免重载后叠加事件。
+
+原来的 `plugins/LSP`、`plugins/UI`、`plugins/Snippets` 目录已归入上述结构。原 `utils` 中实际使用的代码收归片段 helpers，无引用的工具已移除。
+
+### 如何扩展
+
+- **新增插件**：在对应领域的 `lua/plugins/*.lua` 中添加声明，或新建一个返回声明的文件，Lazy 会自动发现。带键位的插件如需启动加载，显式写 `lazy = false`；搬迁映射时保留原来的模式、`silent` 和 `nowait`。
+- **新增语言服务器**：在 `config/lsp.lua` 的 `ensure_installed` 中登记服务器，用 `vim.lsp.config("服务器名", {...})` 添加覆盖配置。Mason 负责安装及启用，保留 Tombi 手动启用。
+- **新增格式化器**：修改 `plugins/formatting.lua` 的 `formatters_by_ft`，并安装对应可执行文件。Shell 保持仅手动格式化。
+- **新增片段**：在 `snippets/definitions/<filetype>.lua` 返回片段表，并把文件类型加入 `snippets/init.lua` 的列表。共用辅助函数放在 `snippets/helpers/`。按 `<leader><leader>s` 会刷新定义与 helpers，稳定的注册 key 避免重复候选。
+- **更新插件**：兼容性敏感的插件声明使用固定版本或提交。修改目标版本后更新对应锁项，测试通过再提交 `lazy-lock.json`；其他机器用 `:Lazy restore` 对齐。
+
+### Lua 与 LSP
+
+使用 Neovim 0.12 原生的 `vim.lsp.config` 和客户端方法调用。Lspsaga 使用维护中的 [nvimdev 仓库](https://github.com/nvimdev/lspsaga.nvim)，保留定义预览里的 `Ctrl-C` 组合键以及原有导航键。
+
+[Lazydev](https://github.com/folke/lazydev.nvim) 代替 neodev，根据当前 Lua 文件引用的模块补充 LuaLS 类型。Blink 的 Lazydev 来源仅对 Lua 启用，其他语言继续使用原有补全来源。自动函数签名提示继续由 lsp_signature 提供。
+
+旧的大纲插件已迁移到 [outline.nvim](https://github.com/hedyhli/outline.nvim)，保留 `:SymbolsOutline`、`:SymbolsOutlineOpen` 和 `:SymbolsOutlineClose`，继续使用右侧大纲窗口。日常的 Aerial 和 Lspsaga 大纲键位保持不变。
+
+`config/lsp_compat.lua` 对锁定版本 Lspsaga 的重命名引用高亮与类型层级请求作局部修复，处理客户端方法、字符编码和过期异步响应，不修改 Neovim 全局 API，也不屏蔽警告。后续升级该插件时应核对上游是否已修复，再删除对应兼容代码。
+
+## 检查与维护
+
+先完成插件和语言服务器安装，然后在当前启用的配置目录运行。
+
+```sh
+cd ~/.config/nvim
+bash scripts/check.sh
+uv run --no-project --with pynvim==0.6.0 python tests/lsp.py
+```
+
+第一条需要 PATH 中的 `nvim` 和 `stylua`，检查 Lua 格式、插件 checkout 与锁文件、常用快捷键、主题和片段重复加载。第二条使用临时 Lua 项目验证真实 LuaLS 连接、Lazydev 类型库和补全、Lspsaga 窗口、旧大纲命令、自动签名提示及 LSP 弃用日志，需要已安装 `lua_ls`。取消重命名、迟到响应等边界通过受控请求检查；LuaLS 不提供类型层级功能，该分支使用协议替身验证编码和结果选择，不能代替具体语言服务器的完整测试。
+
+测试继承 `XDG_CONFIG_HOME`、`XDG_DATA_HOME`，也可用 `NVIM_BIN` 指定 Neovim。测试关闭 Codeium，避免把测试片段发送给外部 AI；不改写用户项目文件。
+
+日常排查使用 `:checkhealth vim.lsp`、`:checkhealth vim.deprecated`、`:ConformInfo` 和 `:messages`。本次针对 LSP 接口进行了兼容修复；部分未更新插件仍可能报告通用的 `vim.validate{...}` 弃用提示，检查不会将其隐藏。

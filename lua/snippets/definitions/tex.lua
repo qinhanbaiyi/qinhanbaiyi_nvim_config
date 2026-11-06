@@ -1,20 +1,18 @@
+-- LaTeX 文档、宏包与列表模板；列表通过递归动态节点按需增加条目。
 local ls = require("luasnip")
 local s = ls.snippet
 local sn = ls.snippet_node
 local t = ls.text_node
 local i = ls.insert_node
-local f = ls.function_node
 local c = ls.choice_node
 local d = ls.dynamic_node
-local r = ls.restore_node
-local events = require("luasnip.util.events")
 local rec_ls
 rec_ls = function()
 	return sn(nil, {
 		c(1, {
-			-- important!! Having the sn(...) as the first choice will cause infinite recursion.
+			-- 空选项必须放在首位，避免递归片段无限展开。
 			t({ "" }),
-			-- The same dynamicNode as in the snippet (also note: self reference).
+			-- 选择下一项后再生成一组条目和后续选择。
 			sn(nil, {
 				t({ "", "\t\\item " }),
 				i(1),
@@ -24,8 +22,7 @@ rec_ls = function()
 	})
 end
 
-local M = {}
-M = {
+return {
 	s("doc", {
 		t({ "\\documentclass{" }),
 		i(1, "class"),
@@ -138,5 +135,3 @@ M = {
 		i(0),
 	}),
 }
-
-return M

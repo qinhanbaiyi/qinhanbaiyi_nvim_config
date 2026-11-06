@@ -1,3 +1,4 @@
+-- 基础编辑习惯集中在这里，插件专属选项放在 lua/plugins/ 对应文件。
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true

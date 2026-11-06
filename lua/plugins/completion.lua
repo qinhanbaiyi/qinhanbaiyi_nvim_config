@@ -1,3 +1,5 @@
+-- Blink 管理补全菜单，LuaSnip 管理片段跳转，两者各自保留原有键位。
+-- 主题切换后恢复补全颜色，不让补全插件替换主主题。
 local function set_highlights()
 	local colors = {
 		BlinkCmpLabelDeprecated = { fg = "#808080", strikethrough = true },
@@ -36,7 +38,7 @@ return {
 			fuzzy = { implementation = "prefer_rust" },
 			keymap = {
 				preset = "none",
-				-- Enter falls through to a newline until the user selects a candidate.
+				-- 未主动选中候选时，回车继续换行；选中后才接受补全。
 				["<CR>"] = { "accept", "fallback" },
 				["<Tab>"] = {
 					function(cmp)
@@ -69,13 +71,17 @@ return {
 			},
 			sources = {
 				default = { "lsp", "snippets", "path", "buffer" },
+				-- 仅 Lua 启用模块名补全，其他语言的候选来源和排序保持不变。
+				per_filetype = { lua = { "lazydev", "lsp", "snippets", "path", "buffer" } },
 				providers = {
+					lazydev = { name = "LazyDev", module = "lazydev.integrations.blink", score_offset = 100 },
 					snippets = { name = "LuaSnip" },
 					lsp = { fallbacks = {} },
 					path = { fallbacks = {} },
 					buffer = { min_keyword_length = 4 },
 				},
 			},
+			-- 冒号命令行支持补全，/ 与 ? 搜索沿用原来的输入行为。
 			cmdline = {
 				sources = function()
 					if vim.fn.getcmdtype() == ":" then

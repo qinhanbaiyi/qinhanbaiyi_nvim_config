@@ -1,3 +1,4 @@
+-- Flash 的语法树搜索使用可视/操作符模式 R，选择模式 R 留给 SnipRun。
 return {
 	{
 		"folke/flash.nvim",

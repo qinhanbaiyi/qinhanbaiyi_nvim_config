@@ -1,0 +1,7 @@
+# 统一 Lua 源码格式，便于审查目录迁移和后续改动。
+column_width = 120
+line_endings = "Unix"
+indent_type = "Tabs"
+indent_width = 4
+quote_style = "AutoPreferDouble"
+call_parentheses = "Always"

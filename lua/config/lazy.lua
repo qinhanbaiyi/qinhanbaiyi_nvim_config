@@ -1,3 +1,4 @@
+-- 固定 Lazy 引导版本，插件清单统一从 plugins/ 导入，具体提交由锁文件记录。
 local version = "v11.17.1"
 local data = vim.fn.stdpath("data")
 local lazypath = vim.fs.joinpath(data, "lazy", "lazy.nvim")
@@ -11,15 +12,21 @@ if not vim.uv.fs_stat(entry) then
 	vim.fn.mkdir(vim.fs.dirname(lazypath), "p")
 	local staging = assert(vim.uv.fs_mkdtemp(vim.fs.joinpath(data, "lazy-bootstrap-XXXXXX")))
 	local output = vim.fn.system({
-		"git", "clone", "--filter=blob:none", "--depth=1", "--branch", version,
-		"https://github.com/folke/lazy.nvim.git", staging,
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"--depth=1",
+		"--branch",
+		version,
+		"https://github.com/folke/lazy.nvim.git",
+		staging,
 	})
 	if vim.v.shell_error ~= 0 then
 		vim.fn.delete(staging, "rf")
 		error("Failed to install lazy.nvim " .. version .. "\n" .. output, 0)
 	end
 
-	-- Publish the clone only when complete so concurrent starts never load a partial install.
+	-- 克隆完成后才原子替换目录，避免并发启动读到未完成的插件。
 	local installed, rename_error = vim.uv.fs_rename(staging, lazypath)
 	if not installed then
 		vim.fn.delete(staging, "rf")
