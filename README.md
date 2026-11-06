@@ -164,3 +164,11 @@ Gitsigns 的旧 `toggle_deleted` 接口已经失效，`<leader>td` 现在打开/
 NeoCodeium 复用 `~/.codeium/config.json`。旧 `apiKey` 字段只在内存中适配为新插件需要的格式，不把认证数据写入仓库。新环境使用 `:NeoCodeium auth`，默认服务二进制由插件管理；本地服务路径可通过 `vim.g.neocodeium_bin` 指定。首次迁移实测旧账号认证、服务连接和合成请求响应正常，但该请求返回空候选，因此云端生成效果仍以实际使用为准。
 
 日常排查使用 `:checkhealth vim.lsp`、`:checkhealth vim.deprecated`、`:ConformInfo` 和 `:messages`。已有配置的模块职责、关键选项、延迟加载原因和兼容边界均写在对应代码注释中。
+
+## 隐私与本地数据
+
+Git 提交记录会公开作者邮箱。新机器提交前，建议在 GitHub 的邮箱设置中开启邮箱隐私，复制 GitHub 提供的 noreply 地址，再为本仓库设置 `git config user.email "你的 GitHub noreply 地址"`；这只影响之后的提交，不会自动清除历史邮箱。
+
+撤销记录、交换文件、备份、日志和插件运行数据应保存在 Neovim 的标准数据、状态或缓存目录中，不放在配置仓库内。可用 `:echo stdpath('state')`、`:echo stdpath('data')` 和 `:echo stdpath('cache')` 查看本机位置。代码片段使用通用占位，个人笔记和机构信息留在自己的项目中。
+
+禁止提交令牌、密码、私钥和带真实认证值的环境文件；认证信息由对应工具存放在仓库外。`.gitignore` 只防止误加入匹配的新文件，不能移除已经跟踪的文件或清理提交历史。提交前检查 `git diff --cached`，示例环境文件也应只使用占位值。

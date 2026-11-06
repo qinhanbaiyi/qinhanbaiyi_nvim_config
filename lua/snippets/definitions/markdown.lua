@@ -110,49 +110,43 @@ return {
 			return snip
 		end, {}, "   "),
 	}),
+	-- 通用任务清单沿用原触发词和 9 个跳转节点，避免把个人学习安排写进公共模板。
 	s(
 		"dailyWorkReport",
 		fmt(
 			[[
-# {}
+# 每日任务记录 {}
 
-## Today's plan
+## 计划任务
 
-> Describe today's work
+- [ ] 重点任务：{}
+- [ ] 常规任务：{}
+- [ ] 待跟进事项：{}
 
-- 学习
- - {} 练习材料
- - {} 复习工具
-- 工作
- - {} 专项练习
- - 任务
-   - 新任务+复盘
-   - 复习
+## 完成情况
 
-## Summary for today
+- 已完成事项：{}
+- 问题与处理：{}
 
-| **Completed** | **To be improved** |
-|:-:|:-:|
-|{}|{}|
-| **Reflection** | **Others** |
-|{}|{}|
+## 总结
 
-## Tomorrow's plan
+- 今日记录：{}
+- 后续改进：{}
 
-> Describe the work plan for tomorrow
+## 下一步
 
 - {}
 		]],
 			{
-				i(1, "data"),
-				i(2, "内容"),
-				i(3, "内容"),
-				i(4, "范围"),
+				i(1, "日期"),
+				i(2, "任务内容"),
+				i(3, "任务内容"),
+				i(4, "待跟进内容"),
 				i(5),
 				i(6),
 				i(7),
 				i(8),
-				i(9, "tomorrow's plan"),
+				i(9, "下一步计划"),
 			}
 		)
 	),

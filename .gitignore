@@ -1,2 +1,27 @@
 /lua.bak/
 /lua/plugins/lazy.lua.bak
+
+# Neovim 撤销、交换和备份文件应保存在仓库外；忽略规则也防止误复制后提交。
+.undodir/
+/undo/
+/swap/
+/backup/
+*.swp
+*.swo
+*.swn
+*~
+
+# 本地认证环境文件；仅允许不含真实凭据的示例模板入库。
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+
+# 常见 SSH 私钥采用精确文件名，不忽略普通源码、公开证书或 *.pub。
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+id_ecdsa_sk
+id_ed25519_sk

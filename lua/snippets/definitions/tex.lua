@@ -55,6 +55,7 @@ return {
 			"\\hypersetup{hidelinks}",
 		}),
 	}),
+	-- 页眉只保留通用课程设计名称，展开后可在原插入节点填写自己的标题。
 	s("package-hdr", {
 		t({
 			"\\usepackage{fancyhdr}",
